@@ -50,34 +50,13 @@ pub fn fill_arrival_price_params(
     base_order.algo_strategy = "ArrivalPx".to_string();
 
     base_order.algo_params.extend([
-        TagValue::new(
-            "maxPctVol".to_string(),
-            max_pct_vol.to_string(),
-        ),
-        TagValue::new(
-            "riskAversion".to_string(),
-            risk_aversion.to_string(),
-        ),
-        TagValue::new(
-            "startTime".to_string(),
-            start_time.to_string(),
-        ),
-        TagValue::new(
-            "endTime".to_string(),
-            end_time.to_string(),
-        ),
-        TagValue::new(
-            "forceCompletion".to_string(),
-            force_completion.to_string(),
-        ),
-        TagValue::new(
-            "allowPastEndTime".to_string(),
-            allow_past_time.to_string(),
-        ),
-        TagValue::new(
-            "monetaryValue".to_string(),
-            monetary_value.to_string(),
-        )
+        TagValue::new("maxPctVol".to_string(), max_pct_vol.to_string()),
+        TagValue::new("riskAversion".to_string(), risk_aversion.to_string()),
+        TagValue::new("startTime".to_string(), start_time.to_string()),
+        TagValue::new("endTime".to_string(), end_time.to_string()),
+        TagValue::new("forceCompletion".to_string(), force_completion.to_string()),
+        TagValue::new("allowPastEndTime".to_string(), allow_past_time.to_string()),
+        TagValue::new("monetaryValue".to_string(), monetary_value.to_string()),
     ]);
 }
 

@@ -207,7 +207,12 @@ impl Contract {
     /// * exchange: Destination exchange.
     /// * symbol: Base currency.
     /// * currency: Quote currency.
-    pub fn forex(pair: &str, exchange: Option<&str>, symbol: Option<&str>, currency: Option<&str>) -> Self {
+    pub fn forex(
+        pair: &str,
+        exchange: Option<&str>,
+        symbol: Option<&str>,
+        currency: Option<&str>,
+    ) -> Self {
         assert!(pair.len() == 6);
 
         Self {
@@ -239,7 +244,6 @@ impl Contract {
             ..Default::default()
         }
     }
-
 }
 
 impl Display for Contract {

@@ -61,29 +61,29 @@ impl<T: Streamer> TestWrapper<T> {
     //----------------------------------------------------------------------------------------------
     pub fn start_requests(&mut self) -> Result<(), IBKRApiLibError> {
         self.order_operations_req()?; //tested ok
-        //self.what_if_order_operations()?; //tested ok
-        //self.account_operations_req()?; //tested ok
-        //self.market_data_type_operations()?; //tested ok
-        //self.tick_data_operations_req(); //tested ok
-        //self.market_depth_operations_req(); //tested ok
-        //self.real_time_bars_operations_req(); // tested ok
-        //self.historical_data_operations_req(); // Tested ok
-        //self.options_operations_req(); tested ok
-        //self.market_scanners_operations_req()?; // tested ok
-        //self.fundamentals_operations_req(); //retest with research data subscription
-        //self.contract_operations()?; //tested ok
-        //self.tick_by_tick_operations_req()?; //tested ok
-        //self.historical_ticks_operations(); //tested ok
-        //self.histogram_operations_req(); //tested ok
-        //self.continuous_futures_operations_req(); //tested ok
-        //self.pnl_operations_req()?; //tested ok
-        //self.market_rule_operations(); //testd ok
-        //self.reroute_cfd_operations(); //tested ok
-        //self.financial_advisor_operations(); need financial advisor account to test
-        //self.news_operations_req()?; // tested ok
-        //self.bulletins_operations_req()?; //tested ok
-        //self.miscelaneous_operations(); //tested ok
-        //self.linking_operations(); //tested ok
+                                      //self.what_if_order_operations()?; //tested ok
+                                      //self.account_operations_req()?; //tested ok
+                                      //self.market_data_type_operations()?; //tested ok
+                                      //self.tick_data_operations_req(); //tested ok
+                                      //self.market_depth_operations_req(); //tested ok
+                                      //self.real_time_bars_operations_req(); // tested ok
+                                      //self.historical_data_operations_req(); // Tested ok
+                                      //self.options_operations_req(); tested ok
+                                      //self.market_scanners_operations_req()?; // tested ok
+                                      //self.fundamentals_operations_req(); //retest with research data subscription
+                                      //self.contract_operations()?; //tested ok
+                                      //self.tick_by_tick_operations_req()?; //tested ok
+                                      //self.historical_ticks_operations(); //tested ok
+                                      //self.histogram_operations_req(); //tested ok
+                                      //self.continuous_futures_operations_req(); //tested ok
+                                      //self.pnl_operations_req()?; //tested ok
+                                      //self.market_rule_operations(); //testd ok
+                                      //self.reroute_cfd_operations(); //tested ok
+                                      //self.financial_advisor_operations(); need financial advisor account to test
+                                      //self.news_operations_req()?; // tested ok
+                                      //self.bulletins_operations_req()?; //tested ok
+                                      //self.miscelaneous_operations(); //tested ok
+                                      //self.linking_operations(); //tested ok
         Ok(())
     }
 
@@ -1764,13 +1764,7 @@ impl<T: Streamer> TestWrapper<T> {
             .expect(CLIENT_IS_NONE)
             .lock()
             .expect(CLIENT_POISONED_MUTEX)
-            .request_mkt_depth(
-                2001,
-                contract_samples::eur_gbp_fx().borrow(),
-                5,
-                false,
-                &[],
-            )?;
+            .request_mkt_depth(2001, contract_samples::eur_gbp_fx().borrow(), 5, false, &[])?;
 
         self.client
             .as_ref()
@@ -2406,13 +2400,7 @@ impl<T: Streamer> TestWrapper<T> {
             .expect(CLIENT_IS_NONE)
             .lock()
             .expect(CLIENT_POISONED_MUTEX)
-            .request_mkt_depth(
-                16006,
-                contract_samples::cash_cfd().borrow(),
-                10,
-                false,
-                &[],
-            )?;
+            .request_mkt_depth(16006, contract_samples::cash_cfd().borrow(), 10, false, &[])?;
 
         Ok(())
     }
@@ -3317,7 +3305,10 @@ where
 
     //----------------------------------------------------------------------------------------------
     fn historical_data(&mut self, request_id: i32, bar: BarData) {
-        info!("historical_data -- request_id: {}, bar: {}", request_id, bar);
+        info!(
+            "historical_data -- request_id: {}, bar: {}",
+            request_id, bar
+        );
     }
 
     //----------------------------------------------------------------------------------------------
@@ -3715,11 +3706,17 @@ where
 
     //----------------------------------------------------------------------------------------------
     fn histogram_data(&mut self, request_id: i32, items: Vec<HistogramData>) {
-        info!("histogram_data -- request_id: {}, items: {:?}", request_id, items);
+        info!(
+            "histogram_data -- request_id: {}, items: {:?}",
+            request_id, items
+        );
     }
 
     fn historical_data_update(&mut self, request_id: i32, bar: BarData) {
-        info!("historical_data_update -- request_id: {}, bar: {}", request_id, bar);
+        info!(
+            "historical_data_update -- request_id: {}, bar: {}",
+            request_id, bar
+        );
     }
 
     //----------------------------------------------------------------------------------------------
@@ -3792,7 +3789,12 @@ where
     }
 
     //----------------------------------------------------------------------------------------------
-    fn historical_ticks_last(&mut self, request_id: i32, ticks: Vec<HistoricalTickLast>, done: bool) {
+    fn historical_ticks_last(
+        &mut self,
+        request_id: i32,
+        ticks: Vec<HistoricalTickLast>,
+        done: bool,
+    ) {
         info!(
             "historical_ticks_last -- request_id: {}, ticks: {:?}, done: {}",
             request_id, ticks, done

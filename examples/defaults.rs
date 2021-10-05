@@ -325,7 +325,10 @@ impl Wrapper for DefaultWrapper {
 
     //----------------------------------------------------------------------------------------------
     fn historical_data(&mut self, request_id: i32, bar: BarData) {
-        info!("historical_data -- request_id: {}, bar: {}", request_id, bar);
+        info!(
+            "historical_data -- request_id: {}, bar: {}",
+            request_id, bar
+        );
     }
 
     //----------------------------------------------------------------------------------------------
@@ -723,12 +726,18 @@ impl Wrapper for DefaultWrapper {
 
     //----------------------------------------------------------------------------------------------
     fn histogram_data(&mut self, request_id: i32, items: Vec<HistogramData>) {
-        info!("histogram_data -- request_id: {}, items: {:?}", request_id, items);
+        info!(
+            "histogram_data -- request_id: {}, items: {:?}",
+            request_id, items
+        );
     }
 
     //----------------------------------------------------------------------------------------------
     fn historical_data_update(&mut self, request_id: i32, bar: BarData) {
-        info!("historical_data_update -- request_id: {}, bar: {}", request_id, bar);
+        info!(
+            "historical_data_update -- request_id: {}, bar: {}",
+            request_id, bar
+        );
     }
 
     //----------------------------------------------------------------------------------------------
@@ -801,7 +810,12 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn historical_ticks_last(&mut self, request_id: i32, ticks: Vec<HistoricalTickLast>, done: bool) {
+    fn historical_ticks_last(
+        &mut self,
+        request_id: i32,
+        ticks: Vec<HistoricalTickLast>,
+        done: bool,
+    ) {
         info!(
             "historical_ticks_last -- request_id: {}, ticks: {:?}, done: {}",
             request_id, ticks, done

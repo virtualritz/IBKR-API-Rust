@@ -36,9 +36,9 @@ pub trait Wrapper: Send + Sync {
     /// type is set to `Frozen` or `RealTime`, to announce that market data has
     /// been switched between frozen and real-time. This notification occurs
     /// only when market data switches between real-time and frozen. The
-    /// `market_data_type()` callback accepts a `request_id` parameter and is sent
-    /// per every subscription because different contracts can generally
-    /// trade on a different schedule.
+    /// `market_data_type()` callback accepts a `request_id` parameter and is
+    /// sent per every subscription because different contracts can
+    /// generally trade on a different schedule.
     fn market_data_type(&mut self, request_id: i32, market_data_type: i32);
 
     //----------------------------------------------------------------------------------------------
@@ -553,9 +553,9 @@ pub trait Wrapper: Send + Sync {
 
     //----------------------------------------------------------------------------------------------
     /// Returns the option chain for an underlying on an exchange
-    /// specified in request_sec_def_opt_params There will be multiple callbacks to
-    /// security_definition_option_parameter if multiple exchanges are specified
-    /// in request_sec_def_opt_params
+    /// specified in request_sec_def_opt_params There will be multiple callbacks
+    /// to security_definition_option_parameter if multiple exchanges are
+    /// specified in request_sec_def_opt_params
     //
     /// # Arguments
     /// * request_id - ID of the request initiating the callback
@@ -604,7 +604,10 @@ pub trait Wrapper: Send + Sync {
 
     //----------------------------------------------------------------------------------------------
     /// returns array of exchanges which return depth to UpdateMktDepthL2
-    fn market_depth_exchanges(&mut self, depth_market_data_descriptions: Vec<DepthMktDataDescription>);
+    fn market_depth_exchanges(
+        &mut self,
+        depth_market_data_descriptions: Vec<DepthMktDataDescription>,
+    );
 
     //----------------------------------------------------------------------------------------------
     /// returns news headlines
@@ -683,7 +686,13 @@ pub trait Wrapper: Send + Sync {
 
     //----------------------------------------------------------------------------------------------
     /// returns the daily PnL for the account
-    fn profit_and_loss(&mut self, request_id: i32, daily_pn_l: f64, unrealized_pn_l: f64, realized_pn_l: f64);
+    fn profit_and_loss(
+        &mut self,
+        request_id: i32,
+        daily_pn_l: f64,
+        unrealized_pn_l: f64,
+        realized_pn_l: f64,
+    );
 
     //----------------------------------------------------------------------------------------------
     /// returns the daily PnL for a single position in the account
@@ -712,7 +721,12 @@ pub trait Wrapper: Send + Sync {
 
     //----------------------------------------------------------------------------------------------
     /// returns historical tick data when what_to_how=TRADES
-    fn historical_ticks_last(&mut self, request_id: i32, ticks: Vec<HistoricalTickLast>, done: bool);
+    fn historical_ticks_last(
+        &mut self,
+        request_id: i32,
+        ticks: Vec<HistoricalTickLast>,
+        done: bool,
+    );
 
     //----------------------------------------------------------------------------------------------
     /// returns tick-by-tick data for tickType = "Last" or "AllLast"

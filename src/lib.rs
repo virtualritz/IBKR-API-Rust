@@ -1,5 +1,4 @@
-//! Lib for sending requests to and processing responses from Interactive
-//! Broker's Trader Workstation (TWS) or IB Gateway.
+//! Crate for communicating with the Interactive Broker's Trader Workstation (TWS) or IB Gateway.
 //!
 //! For usage of this library, please see the example implementation in
 //! [`manual_tests.rs`](https://github.com/sparkstartconsulting/IBKR-API-Rust/blob/master/src/examples/test_helpers/manual_tests.rs)
@@ -50,6 +49,6 @@
 //!     Ok(())
 //! }
 //! ```
+
 pub mod core;
-//pub mod examples;
-mod tests;
+pub use ::core::*;

@@ -1,3 +1,7 @@
+
+mod contract_samples;
+use contract_samples::simple_future;
+
 #[cfg(test)]
 mod tests {
     use crate::core::client::{ConnStatus, EClient, POISONED_MUTEX};
@@ -10,18 +14,13 @@ mod tests {
             TickAttribLast, TickByTickType, TickType,
         },
         contract::{Contract, ContractDescription, ContractDetails, DeltaNeutralContract},
+        errors::IBKRApiLibError,
         execution::{Execution, ExecutionFilter},
+        messages::{read_fields, read_msg, OutgoingMessageIds},
+        order::OrderState,
         order::{Order, SoftDollarTier},
         streamer::{Streamer, TestStreamer},
         wrapper::Wrapper,
-    };
-    use crate::{
-        core::{
-            errors::IBKRApiLibError,
-            messages::{read_fields, read_msg, OutgoingMessageIds},
-            order::OrderState,
-        },
-        examples::contract_samples::simple_future,
     };
     use std::sync::{Arc, Mutex};
 
@@ -76,7 +75,7 @@ mod tests {
             todo!()
         }
 
-        fn tick_efp(
+        fn tick_exchange_for_physical(
             &mut self,
             _request_id: i32,
             _tick_type: TickType,
@@ -103,7 +102,7 @@ mod tests {
             _last_fill_price: f64,
             _client_id: i32,
             _why_held: &str,
-            _mkt_cap_price: f64,
+            _market_cap_price: f64,
         ) {
             todo!()
         }
@@ -143,8 +142,8 @@ mod tests {
             _market_price: f64,
             _market_value: f64,
             _average_cost: f64,
-            _unrealized_pnl: f64,
-            _realized_pnl: f64,
+            _unrealized_profit_and_loss: f64,
+            _realized_profit_and_loss: f64,
             _account_name: &str,
         ) {
             todo!()
@@ -182,7 +181,7 @@ mod tests {
             todo!()
         }
 
-        fn update_mkt_depth(
+        fn update_market_depth(
             &mut self,
             _request_id: i32,
             _position: i32,
@@ -194,7 +193,7 @@ mod tests {
             todo!()
         }
 
-        fn update_mkt_depth_l2(
+        fn update_market_depth_l2(
             &mut self,
             _request_id: i32,
             _position: i32,
@@ -222,7 +221,7 @@ mod tests {
             todo!()
         }
 
-        fn receive_fa(&mut self, _fa_data: FaDataType, _cxml: &str) {
+        fn receive_financial_advisor(&mut self, _financial_advisor_data: FaDataType, _cxml: &str) {
             todo!()
         }
 
@@ -401,7 +400,7 @@ mod tests {
             todo!()
         }
 
-        fn family_codes(&mut self, _family_codes: Vec<FamilyCode>) {
+        fn family_codes(&mut self, _financial_advisormily_codes: Vec<FamilyCode>) {
             todo!()
         }
 
@@ -413,9 +412,9 @@ mod tests {
             todo!()
         }
 
-        fn mkt_depth_exchanges(
+        fn market_depth_exchanges(
             &mut self,
-            _depth_mkt_data_descriptions: Vec<DepthMktDataDescription>,
+            _depth_market_data_descriptions: Vec<DepthMktDataDescription>,
         ) {
             todo!()
         }
@@ -436,7 +435,7 @@ mod tests {
             todo!()
         }
 
-        fn tick_request_params(
+        fn tick_request_parameters(
             &mut self,
             _ticker_id: i32,
             _min_tick: f64,
@@ -481,11 +480,16 @@ mod tests {
             todo!()
         }
 
-        fn reroute_mkt_data_req(&mut self, _request_id: i32, _con_id: i32, _exchange: &str) {
+        fn reroute_market_data_request(&mut self, _request_id: i32, _con_id: i32, _exchange: &str) {
             todo!()
         }
 
-        fn reroute_mkt_depth_req(&mut self, _request_id: i32, _con_id: i32, _exchange: &str) {
+        fn reroute_market_depth_request(
+            &mut self,
+            _request_id: i32,
+            _con_id: i32,
+            _exchange: &str,
+        ) {
             todo!()
         }
 
@@ -493,7 +497,7 @@ mod tests {
             todo!()
         }
 
-        fn pnl(
+        fn profit_and_loss(
             &mut self,
             _request_id: i32,
             _daily_pn_l: f64,
@@ -503,7 +507,7 @@ mod tests {
             todo!()
         }
 
-        fn pnl_single(
+        fn profit_and_loss_single(
             &mut self,
             _request_id: i32,
             _pos: i32,
@@ -689,7 +693,12 @@ mod tests {
         let mut locked_app = app.lock().expect("EClient mutex was poisoned");
 
         locked_app.connect_test();
-        locked_app.request_account_updates_multi(request_id, acct_code, model_code, ledger_and_nvl)?;
+        locked_app.request_account_updates_multi(
+            request_id,
+            acct_code,
+            model_code,
+            ledger_and_nvl,
+        )?;
         locked_app.stream.as_mut().unwrap().read_to_end(&mut buf)?;
 
         let expected: [u8; 26] = [

@@ -35,13 +35,12 @@ use crate::core::wrapper::Wrapper;
 
 pub(crate) static POISONED_MUTEX: &str = "Mutex was poisoned";
 
-
 #[repr(i32)]
 #[derive(FromPrimitive, ToPrimitive, Copy, Clone, Debug)]
 pub enum DateTimeFormat {
     // #[default]
     DateTime = 1,
-    Seconds = 2
+    Seconds = 2,
 }
 
 //==================================================================================================
@@ -329,15 +328,15 @@ where
     ///   generic_tick_list values if you use snapshots.
     /// * `regulatory_snapshot` - With the US Value Snapshot Bundle for stocks,
     ///   regulatory snapshots are available for 0.01 USD each.
-    /// * `mkt_data_options` - For internal use only. Use default value XYZ.
-    pub fn request_mkt_data(
+    /// * `market_data_options` - For internal use only. Use default value XYZ.
+    pub fn request_market_data(
         &mut self,
         request_id: i32,
         contract: &Contract,
         generic_tick_list: &str,
         snapshot: bool,
         regulatory_snapshot: bool,
-        mkt_data_options: &[TagValue],
+        market_data_options: &[TagValue],
     ) -> Result<(), IBKRApiLibError> {
         self.check_connected(request_id)?;
 
@@ -375,7 +374,7 @@ where
                 format!(
                     "{}{}",
                     TwsError::UpdateTws.message(),
-                    " It does not support trading_class parameter in request_mkt_data."
+                    " It does not support trading_class parameter in request_market_data."
                 ),
             ));
 
@@ -388,7 +387,7 @@ where
 
         let mut msg = "".to_string();
 
-        // send req mkt data msg
+        // send req market data msg
         msg.push_str(&make_field(&message_id)?);
         msg.push_str(&make_field(&version)?);
         msg.push_str(&make_field(&request_id)?);
@@ -449,24 +448,24 @@ where
             msg.push_str(&make_field(&regulatory_snapshot)?);
         }
 
-        // send mktDataOptions parameter
+        // send marketDataOptions parameter
         if self.server_version() >= MIN_SERVER_VER_LINKING {
             // current doc says this part is for "internal use only" -> won't support it
-            if !mkt_data_options.is_empty() {
+            if !market_data_options.is_empty() {
                 let err = IBKRApiLibError::ApiError(TwsApiReportableError::new(
                     request_id,
                     TwsError::UpdateTws.code().to_string(),
                     format!(
                         "{}{}",
                         TwsError::UpdateTws.message(),
-                        " Internal use only.  mkt_data_options not supported."
+                        " Internal use only.  market_data_options not supported."
                     ),
                 ));
 
                 return Err(err);
             }
-            let mkt_data_options_str = "";
-            msg.push_str(&make_field(&mkt_data_options_str)?);
+            let market_data_options_str = "";
+            msg.push_str(&make_field(&market_data_options_str)?);
         }
 
         self.send_request(msg.as_str())?;
@@ -478,8 +477,9 @@ where
     /// flowing.
     ///
     /// # Arguments
-    /// * request_id - The ID that was specified in the call to request_mkt_data()
-    pub fn cancel_mkt_data(&mut self, request_id: i32) -> Result<(), IBKRApiLibError> {
+    /// * request_id - The ID that was specified in the call to
+    ///   request_market_data()
+    pub fn cancel_market_data(&mut self, request_id: i32) -> Result<(), IBKRApiLibError> {
         self.check_connected(request_id)?;
 
         let version = 2;
@@ -507,7 +507,10 @@ where
     /// * market_data_type
     /// * 1 for real-time streaming market data
     /// * 2 for frozen market data
-    pub fn request_market_data_type(&mut self, market_data_type: i32) -> Result<(), IBKRApiLibError> {
+    pub fn request_market_data_type(
+        &mut self,
+        market_data_type: i32,
+    ) -> Result<(), IBKRApiLibError> {
         self.check_connected(NO_VALID_ID)?;
 
         if self.server_version() < MIN_SERVER_VER_REQ_MARKET_DATA_TYPE {
@@ -539,9 +542,9 @@ where
     //----------------------------------------------------------------------------------------------
     /// Returns the mapping of single letter codes to exchange names given the
     /// mapping identifier. # Arguments
-    /// * request_id - The request id. Must be a unique value. When the market data
-    ///   returns, it will be identified by this tag. This is also used when
-    ///   canceling the market data.
+    /// * request_id - The request id. Must be a unique value. When the market
+    ///   data returns, it will be identified by this tag. This is also used
+    ///   when canceling the market data.
     /// * bbo_exchange - mapping identifier received from
     ///   Wrapper::tick_request_params
     pub fn request_smart_components(
@@ -881,7 +884,7 @@ where
 
         let version = 3;
 
-        // send req mkt data msg
+        // send req market data msg
         let mut msg = "".to_string();
 
         let message_id = OutgoingMessageIds::ReqCalcOptionPrice as i32;
@@ -932,7 +935,10 @@ where
     ///
     /// # Arguments
     /// * request_id - The original request id.
-    pub fn cancel_calculate_option_price(&mut self, request_id: i32) -> Result<(), IBKRApiLibError> {
+    pub fn cancel_calculate_option_price(
+        &mut self,
+        request_id: i32,
+    ) -> Result<(), IBKRApiLibError> {
         self.check_connected(request_id)?;
 
         if self.server_version() < MIN_SERVER_VER_REQ_CALC_IMPLIED_VOLAT {
@@ -1053,7 +1059,7 @@ where
 
         let version = 2;
 
-        // send req mkt data msg
+        // send req market data msg
         let mut msg = "".to_string();
 
         let message_id = OutgoingMessageIds::ExerciseOptions as i32;
@@ -2576,7 +2582,10 @@ where
     ///
     /// # Arguments
     /// * request_id - The id of the original request
-    pub fn cancel_profit_and_loss_single(&mut self, request_id: i32) -> Result<(), IBKRApiLibError> {
+    pub fn cancel_profit_and_loss_single(
+        &mut self,
+        request_id: i32,
+    ) -> Result<(), IBKRApiLibError> {
         self.check_connected(request_id)?;
 
         if self.server_version() < MIN_SERVER_VER_PNL {
@@ -2765,8 +2774,8 @@ where
     //#########################################################################
     //################## Market Depth
     //#########################################################################
-    /// Requests venues for which market data is returned to update_mkt_depth_l2
-    /// (those with market makers)
+    /// Requests venues for which market data is returned to
+    /// update_market_depth_l2 (those with market makers)
     pub fn request_market_depth_exchanges(&mut self) -> Result<(), IBKRApiLibError> {
         self.check_connected(NO_VALID_ID)?;
 
@@ -2793,8 +2802,8 @@ where
 
     //----------------------------------------------------------------------------------------------
     /// Call this function to request market depth for a specific
-    /// contract. The market depth will be returned by the update_mkt_depth()
-    /// and update_mkt_depth_l2() events.
+    /// contract. The market depth will be returned by the update_market_depth()
+    /// and update_market_depth_l2() events.
     ///
     /// Requests the contract's market depth (order book). Note this request
     /// must be direct-routed to an exchange and not smart-routed. The
@@ -2803,9 +2812,9 @@ where
     /// commissions, and quote booster packs.
     ///
     /// # Arguments
-    /// * request_id - The request id. Must be a unique value. When the market depth
-    ///   data returns, it will be identified by this tag. This is also used
-    ///   when canceling the market depth
+    /// * request_id - The request id. Must be a unique value. When the market
+    ///   depth data returns, it will be identified by this tag. This is also
+    ///   used when canceling the market depth
     /// * contract - This structure contains a description of the contract for
     ///   which market depth data is being requested.
     /// * num_rows - Specifies the number of rows of market depth rows to
@@ -2813,14 +2822,14 @@ where
     /// * is_smart_depth - specifies SMART depth request  NOTE: ALWAYS SET TO
     ///   FALSE!!!!! THERE SEEMS TO BE A BUG ON IB's SIDE AND THEY WILL STOP
     ///   STREAMING DATA IF THIS IS SET TO TRUE
-    /// * mkt_depth_options - For internal use only. Use default value XYZ.
+    /// * market_depth_options - For internal use only. Use default value XYZ.
     pub fn request_market_depth(
         &mut self,
         request_id: i32,
         contract: &Contract,
         num_rows: i32,
         is_smart_depth: bool,
-        mkt_depth_options: &[TagValue],
+        market_depth_options: &[TagValue],
     ) -> Result<(), IBKRApiLibError> {
         self.check_connected(NO_VALID_ID)?;
 
@@ -2833,7 +2842,7 @@ where
                 format!(
                     "{}{}",
                     TwsError::UpdateTws.message(),
-                    " It does not support con_id and trading_class parameters in request_mkt_depth."
+                    " It does not support con_id and trading_class parameters in request_market_depth."
                 ),
             ));
 
@@ -2863,7 +2872,7 @@ where
                 format!(
                     "{}{}",
                     TwsError::UpdateTws.message(),
-                    " It does not support primary_exchange parameter in request_mkt_depth."
+                    " It does not support primary_exchange parameter in request_market_depth."
                 ),
             ));
 
@@ -2872,7 +2881,7 @@ where
 
         let version = 5;
 
-        // send req mkt depth msg
+        // send req market depth msg
 
         let message_id: i32 = OutgoingMessageIds::ReqMktDepth as i32;
         let mut msg = "".to_string();
@@ -2906,24 +2915,24 @@ where
         if self.server_version() >= MIN_SERVER_VER_SMART_DEPTH {
             msg.push_str(&make_field(&is_smart_depth)?);
         }
-        // send mkt_depth_options parameter
+        // send market_depth_options parameter
         if self.server_version() >= MIN_SERVER_VER_LINKING {
             // current doc says this part if for "internal use only" -> won't support it
-            if !mkt_depth_options.is_empty() {
+            if !market_depth_options.is_empty() {
                 let err = IBKRApiLibError::ApiError(TwsApiReportableError::new(
                     request_id,
                     TwsError::Unsupported.code().to_string(),
                     format!(
                         "{}{}",
                         TwsError::Unsupported.message(),
-                        " mkt_depth_options."
+                        " market_depth_options."
                     ),
                 ));
 
                 return Err(err);
             }
-            let mkt_data_options_str = "";
-            msg.push_str(&make_field(&mkt_data_options_str)?);
+            let market_data_options_str = "";
+            msg.push_str(&make_field(&market_data_options_str)?);
         }
         self.send_request(msg.as_str())
     }
@@ -2933,11 +2942,12 @@ where
     /// will stop flowing.
     ///
     /// # Arguments
-    /// * request_id - The ID that was specified in the call to request_mkt_depth().
+    /// * request_id - The ID that was specified in the call to
+    ///   request_market_depth().
     //
     //  * is_smart_depth - specifies SMART depth request
     //
-    pub fn cancel_mkt_depth(
+    pub fn cancel_market_depth(
         &mut self,
         request_id: i32,
         is_smart_depth: bool,
@@ -3128,9 +3138,9 @@ where
     ///     * BID_ASK
     ///     * HISTORICAL_VOLATILITY
     ///     * OPTION_IMPLIED_VOLATILITY
-    /// * regular_trading_hours_only - Determines whether to return all data available during the
-    ///   requested time span, or only data that falls within regular trading
-    ///   hours. Valid values include:
+    /// * regular_trading_hours_only - Determines whether to return all data
+    ///   available during the requested time span, or only data that falls
+    ///   within regular trading hours. Valid values include:
     ///
     ///     * 0 - all data is returned even where the market in question was
     ///       outside of its regular trading hours.
@@ -3178,7 +3188,7 @@ where
 
         let version = 6;
 
-        // send req mkt data msg
+        // send req market data msg
         let message_id: i32 = OutgoingMessageIds::ReqHistoricalData as i32;
         let mut msg = "".to_string();
         msg.push_str(&make_field(&message_id)?);
@@ -3275,7 +3285,7 @@ where
 
         let version = 6;
 
-        // send req mkt data msg
+        // send req market data msg
         let message_id: i32 = OutgoingMessageIds::ReqHistoricalData as i32;
         let mut msg = "".to_string();
         msg.push_str(&make_field(&message_id)?);
@@ -3371,7 +3381,8 @@ where
     /// * contract - contract object for which head timestamp is being requested
     /// * what_to_show - type of data for head timestamp - "BID", "ASK",
     ///   "TRADES", etc
-    /// * regular_trading_hours_only - use regular trading hours only, 1 for yes or 0 for no
+    /// * regular_trading_hours_only - use regular trading hours only, 1 for yes
+    ///   or 0 for no
     /// * format_date - set to 1 to obtain the bars' time as `yyyyMMdd
     ///   HH:mm:ss`, set to 2 to obtain it like system time format in seconds
     ///
@@ -3419,9 +3430,20 @@ where
         msg.push_str(&make_field(&contract.local_symbol)?);
         msg.push_str(&make_field(&contract.trading_class)?);
         msg.push_str(&make_field(&contract.include_expired)?);
-        msg.push_str(&make_field(if regular_trading_hours_only.unwrap_or(true) { &1 } else { &0 })?);
+        msg.push_str(&make_field(
+            if regular_trading_hours_only.unwrap_or(true) {
+                &1
+            } else {
+                &0
+            },
+        )?);
         msg.push_str(&make_field(&String::from(what_to_show))?);
-        msg.push_str(&make_field(&format_date.unwrap_or(DateTimeFormat::DateTime).to_i32().unwrap())?);
+        msg.push_str(&make_field(
+            &format_date
+                .unwrap_or(DateTimeFormat::DateTime)
+                .to_i32()
+                .unwrap(),
+        )?);
 
         self.send_request(msg.as_str())?;
         Ok(())
@@ -3465,7 +3487,8 @@ where
     /// # Arguments
     /// * ticker_id - an identifier for the request
     /// * contract - Contract object for which histogram is being requested
-    /// * regular_trading_hours_only - use regular trading hours only, 1 for yes or 0 for no
+    /// * regular_trading_hours_only - use regular trading hours only, 1 for yes
+    ///   or 0 for no
     /// * time_period - period of which data is being requested, e.g. "3 days"
     pub fn request_histogram_data(
         &mut self,
@@ -3559,8 +3582,8 @@ where
     /// * number_of_ticks - Number of distinct data points. Max currently 1,000
     ///   per request.
     /// * what_to_show - (Bid_Ask, Midpoint, Trades) Type of data requested.
-    /// * regular_trading_hours_only - Data from regular trading hours (1), or all available hours
-    ///   (0)
+    /// * regular_trading_hours_only - Data from regular trading hours (1), or
+    ///   all available hours (0)
     /// * ignore_size - A filter only used when the source price is Bid_Ask
     /// * misc_options - should be defined as null, reserved for internal use
     pub fn request_historical_ticks(
@@ -3765,13 +3788,13 @@ where
     //#########################################################################
     //################## Real Time Bars
     //#########################################################################
-    /// Call the request_real_time_bars() function to start receiving real time bar
-    /// results through the realtimeBar() EWrapper function.
+    /// Call the request_real_time_bars() function to start receiving real time
+    /// bar results through the realtimeBar() EWrapper function.
     ///
     /// # Arguments
-    /// * request_id - The Id for the request. Must be a unique value. When the data
-    ///   is received, it will be identified by this Id. This is also used when
-    ///   canceling the request.
+    /// * request_id - The Id for the request. Must be a unique value. When the
+    ///   data is received, it will be identified by this Id. This is also used
+    ///   when canceling the request.
     /// * contract - This object contains a description of the contract for
     ///   which real time bars are being requested
     /// * bar_size - Currently only 5 second bars are supported, if any other
@@ -3782,7 +3805,8 @@ where
     ///                  * BID
     ///                  * ASK
     ///                  * MIDPOINT
-    /// * regular_trading_hours_only:bool - Regular Trading Hours only. Valid values include:
+    /// * regular_trading_hours_only:bool - Regular Trading Hours only. Valid
+    ///   values include:
     ///                  * 0 = all data available during the time span requested
     ///                    is returned, including time intervals when the market
     ///                    in question was outside of regular trading hours.
@@ -3873,7 +3897,7 @@ where
 
         let version = 1;
 
-        // Send req mkt data msg
+        // Send req market data msg
         let message_id: i32 = OutgoingMessageIds::CancelRealTimeBars as i32;
         let mut msg = "".to_string();
         msg.push_str(&make_field(&message_id)?);
@@ -4180,7 +4204,8 @@ where
     /// names rather than account numbers.                     More information at <https://www.interactivebrokers.com/en/?f=%2Fen%2Fsoftware%2Fpdfhighlights%2FPDF-AdvisorAllocations.php%3Fib_entity%3Dllc>
     ///
     /// # Arguments
-    /// * request_id - The unique number that will be associated with the response
+    /// * request_id - The unique number that will be associated with the
+    ///   response
     pub fn query_display_groups(&mut self, request_id: i32) -> Result<(), IBKRApiLibError> {
         self.check_connected(NO_VALID_ID)?;
 
@@ -4214,7 +4239,8 @@ where
     /// Integrates API client and TWS window grouping.
     ///
     /// # Arguments
-    /// * request_id - The unique number that will be associated with the response
+    /// * request_id - The unique number that will be associated with the
+    ///   response
     /// * group_id - is the display group for integration
     pub fn subscribe_to_group_events(
         &mut self,
@@ -4302,7 +4328,10 @@ where
     ///
     /// # Arguments
     /// * request_id - The request Id specified in subscribe_to_group_events()
-    pub fn unsubscribe_from_group_events(&mut self, request_id: i32) -> Result<(), IBKRApiLibError> {
+    pub fn unsubscribe_from_group_events(
+        &mut self,
+        request_id: i32,
+    ) -> Result<(), IBKRApiLibError> {
         self.check_connected(NO_VALID_ID)?;
 
         if self.server_version() < MIN_SERVER_VER_LINKING {

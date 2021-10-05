@@ -218,7 +218,9 @@ where
             Some(IncomingMessageIds::PositionData) => self.process_position_data(fields)?,
             Some(IncomingMessageIds::PositionEnd) => self.process_position_end(fields)?,
             Some(IncomingMessageIds::RealTimeBars) => self.process_real_time_bars(fields)?,
-            Some(IncomingMessageIds::ReceiveFa) => self.process_receive_financial_advisor(fields)?,
+            Some(IncomingMessageIds::ReceiveFa) => {
+                self.process_receive_financial_advisor(fields)?
+            }
             Some(IncomingMessageIds::RerouteMktDataReq) => {
                 self.process_reroute_market_data_request(fields)?
             }
@@ -248,7 +250,9 @@ where
             Some(IncomingMessageIds::TickOptionComputation) => {
                 self.process_tick_option_computation(fields)?
             }
-            Some(IncomingMessageIds::TickReqParams) => self.process_tick_request_parameters(fields)?,
+            Some(IncomingMessageIds::TickReqParams) => {
+                self.process_tick_request_parameters(fields)?
+            }
             Some(IncomingMessageIds::TickSize) => self.process_tick_size(fields)?,
             Some(IncomingMessageIds::TickSnapshotEnd) => self.process_tick_snapshot_end(fields)?,
             Some(IncomingMessageIds::TickString) => self.process_tick_string(fields)?,
@@ -1666,12 +1670,10 @@ where
             realized_pnl = decode_f64(&mut fields_itr)?;
         }
 
-        self.wrapper.lock().expect(WRAPPER_POISONED_MUTEX).profit_and_loss(
-            request_id,
-            daily_pnl,
-            unrealized_pnl,
-            realized_pnl,
-        );
+        self.wrapper
+            .lock()
+            .expect(WRAPPER_POISONED_MUTEX)
+            .profit_and_loss(request_id, daily_pnl, unrealized_pnl, realized_pnl);
         Ok(())
     }
 
@@ -1701,7 +1703,14 @@ where
         self.wrapper
             .lock()
             .expect(WRAPPER_POISONED_MUTEX)
-            .profit_and_loss_single(request_id, pos, daily_pnl, unrealized_pnl, realized_pnl, value);
+            .profit_and_loss_single(
+                request_id,
+                pos,
+                daily_pnl,
+                unrealized_pnl,
+                realized_pnl,
+                value,
+            );
         Ok(())
     }
 
@@ -1925,7 +1934,10 @@ where
     }
 
     //----------------------------------------------------------------------------------------------
-    fn process_receive_financial_advisor(&mut self, fields: &[String]) -> Result<(), IBKRApiLibError> {
+    fn process_receive_financial_advisor(
+        &mut self,
+        fields: &[String],
+    ) -> Result<(), IBKRApiLibError> {
         let mut fields_itr = fields.iter();
 
         // Throw away message_id.
@@ -1939,12 +1951,18 @@ where
         self.wrapper
             .lock()
             .expect(WRAPPER_POISONED_MUTEX)
-            .receive_financial_advisor(FromPrimitive::from_i32(fa_data_type).unwrap(), xml.as_ref());
+            .receive_financial_advisor(
+                FromPrimitive::from_i32(fa_data_type).unwrap(),
+                xml.as_ref(),
+            );
         Ok(())
     }
 
     //----------------------------------------------------------------------------------------------
-    fn process_reroute_market_data_request(&mut self, fields: &[String]) -> Result<(), IBKRApiLibError> {
+    fn process_reroute_market_data_request(
+        &mut self,
+        fields: &[String],
+    ) -> Result<(), IBKRApiLibError> {
         let mut fields_itr = fields.iter();
 
         // Throw away message_id.
@@ -1962,7 +1980,10 @@ where
     }
 
     //----------------------------------------------------------------------------------------------
-    fn process_reroute_market_depth_request(&mut self, fields: &[String]) -> Result<(), IBKRApiLibError> {
+    fn process_reroute_market_depth_request(
+        &mut self,
+        fields: &[String],
+    ) -> Result<(), IBKRApiLibError> {
         let mut fields_itr = fields.iter();
 
         // Throw away message_id.
@@ -2301,7 +2322,10 @@ where
 
     //----------------------------------------------------------------------------------------------
     #[allow(dead_code)]
-    fn process_tick_exchange_for_physical(&mut self, fields: &[String]) -> Result<(), IBKRApiLibError> {
+    fn process_tick_exchange_for_physical(
+        &mut self,
+        fields: &[String],
+    ) -> Result<(), IBKRApiLibError> {
         let mut fields_itr = fields.iter();
 
         // Throw away message_id.
@@ -2318,17 +2342,20 @@ where
         let future_last_trade_date = decode_string(&mut fields_itr)?;
         let dividend_impact = decode_f64(&mut fields_itr)?;
         let dividends_to_last_trade_date = decode_f64(&mut fields_itr)?;
-        self.wrapper.lock().expect(WRAPPER_POISONED_MUTEX).tick_exchange_for_physical(
-            ticker_id,
-            FromPrimitive::from_i32(tick_type).unwrap(),
-            basis_points,
-            formatted_basis_points.as_ref(),
-            implied_futures_price,
-            hold_days,
-            future_last_trade_date.as_ref(),
-            dividend_impact,
-            dividends_to_last_trade_date,
-        );
+        self.wrapper
+            .lock()
+            .expect(WRAPPER_POISONED_MUTEX)
+            .tick_exchange_for_physical(
+                ticker_id,
+                FromPrimitive::from_i32(tick_type).unwrap(),
+                basis_points,
+                formatted_basis_points.as_ref(),
+                implied_futures_price,
+                hold_days,
+                future_last_trade_date.as_ref(),
+                dividend_impact,
+                dividends_to_last_trade_date,
+            );
         Ok(())
     }
 
@@ -2470,7 +2497,10 @@ where
     }
 
     //----------------------------------------------------------------------------------------------
-    fn process_tick_request_parameters(&mut self, fields: &[String]) -> Result<(), IBKRApiLibError> {
+    fn process_tick_request_parameters(
+        &mut self,
+        fields: &[String],
+    ) -> Result<(), IBKRApiLibError> {
         let mut fields_itr = fields.iter();
 
         // Throw away message_id.
