@@ -224,7 +224,7 @@ impl Contract {
         }
     }
 
-    pub fn future(symbol: &str, last_trade_date_or_contract_month: &str, exchange: &str) -> Self {
+    pub fn future(symbol: &str, exchange: &str, last_trade_date_or_contract_month: &str) -> Self {
         Self {
             symbol: symbol.to_string(),
             sec_type: "FUT".to_string(),
