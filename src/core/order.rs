@@ -67,13 +67,16 @@ impl Display for SoftDollarTier {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "name: {}, value: {}, display_name: {}",
+            "name: {}\n\
+            value: {}\n\
+            display_name: {}",
             self.name, self.val, self.display_name
         )
     }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(default)]
 pub struct OrderState {
     pub status: String,
     pub init_margin_before: String,
@@ -140,23 +143,23 @@ impl Display for OrderState {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "status: {},
-             init_margin_before: {},
-             maint_margin_before: {},
-             equity_with_loan_before: {},
-             init_margin_change: {},
-             maint_margin_change: {},
-             equity_with_loan_change: {},
-             init_margin_after: {},
-             maint_margin_after: {},
-             equity_with_loan_after: {},
-             commission: {},
-             min_commission: {},
-             max_commission: {},
-             commission_currency: {},
-             warning_text: {},
-             completed_time: {},
-             completed_status: {},\n",
+            "status: {}\n\
+             init_margin_before: {}\n\
+             maint_margin_before: {}\n\
+             equity_with_loan_before: {}\n\
+             init_margin_change: {}\n\
+             maint_margin_change: {}\n\
+             equity_with_loan_change: {}\n\
+             init_margin_after: {}\n\
+             maint_margin_after: {}\n\
+             equity_with_loan_after: {}\n\
+             commission: {}\n\
+             min_commission: {}\n\
+             max_commission: {}\n\
+             commission_currency: {}\n\
+             warning_text: {}\n\
+             completed_time: {}\n\
+             completed_status: {}",
             self.status,
             self.init_margin_before,
             self.maint_margin_before,
@@ -191,6 +194,7 @@ impl Display for OrderState {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(default)]
 pub struct OrderComboLeg {
     pub price: f64, // type: float
 }
@@ -208,6 +212,7 @@ impl Display for OrderComboLeg {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(default)]
 pub struct Order {
     pub soft_dollar_tier: SoftDollarTier,
     // order identifier
@@ -2044,19 +2049,19 @@ impl Display for Order {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "order_id = {},
-             client_id = {},
-             perm_id = {},
-             order_type = {},
-             action = {},
-             total_quantity = {},
-             lmt_price = {},
-             tif = {},
-             what_if = {},
-             algo_strategy = {},
-             algo_params = ({}),
-             CMB = ({}),
-             COND = ({}),\n",
+            "order_id = {}\n\
+             client_id = {}\n\
+             perm_id = {}\n\
+             order_type = {}\n\
+             action = {}\n\
+             total_quantity = {}\n\
+             lmt_price = {}\n\
+             tif = {}\n\
+             what_if = {}\n\
+             algo_strategy = {}\n\
+             algo_params = ({})\n\
+             CMB = ({})\n\
+             COND = ({})",
             self.order_id,
             self.client_id,
             self.perm_id,
@@ -2078,7 +2083,7 @@ impl Display for Order {
                     .collect::<Vec<String>>()
                     .join(",")
             } else {
-                "".to_string()
+                String::new()
             },
             if !self.order_combo_legs.is_empty() {
                 self.order_combo_legs
@@ -2087,7 +2092,7 @@ impl Display for Order {
                     .collect::<Vec<String>>()
                     .join(",")
             } else {
-                "".to_string()
+                String::new()
             },
             if !self.conditions.is_empty() {
                 self.conditions
@@ -2095,7 +2100,7 @@ impl Display for Order {
                     .map(|x| format!("{}|", x.make_fields().unwrap().as_slice().join(",")))
                     .collect::<String>()
             } else {
-                "".to_string()
+                String::new()
             },
         )
     }
@@ -2104,27 +2109,27 @@ impl Display for Order {
 impl Default for Order {
     fn default() -> Self {
         Order {
-            soft_dollar_tier: SoftDollarTier::new("".to_string(), "".to_string(), "".to_string()),
+            soft_dollar_tier: SoftDollarTier::new(String::new(), String::new(), String::new()),
             // order identifier
             order_id: 0,
             client_id: 0,
             perm_id: 0,
 
             // main order fields
-            action: "".to_string(),
+            action: String::new(),
             total_quantity: 0.0,
-            order_type: "".to_string(),
+            order_type: String::new(),
             lmt_price: UNSET_DOUBLE,
             aux_price: UNSET_DOUBLE,
 
             // extended order fields
-            tif: "".to_string(),               // "Time in Force" - DAY, GTC, etc.
-            active_start_time: "".to_string(), // for GTC orders
-            active_stop_time: "".to_string(),  // for GTC orders
-            oca_group: "".to_string(),         // one cancels all group name
-            oca_type: 0,                       /* 1 = CANCEL_WITH_BLOCK, 2 = REDUCE_WITH_BLOCK, 3
-                                                * = REDUCE_NON_BLOCK */
-            order_ref: "".to_string(),
+            tif: String::new(),               // "Time in Force" - DAY, GTC, etc.
+            active_start_time: String::new(), // for GTC orders
+            active_stop_time: String::new(),  // for GTC orders
+            oca_group: String::new(),         // one cancels all group name
+            oca_type: 0,                      /* 1 = CANCEL_WITH_BLOCK, 2 = REDUCE_WITH_BLOCK, 3
+                                               * = REDUCE_NON_BLOCK */
+            order_ref: String::new(),
             transmit: true, // if false, order will be created but not transmited
             parent_id: 0,   /* Parent order Id, to associate Auto STP or TRAIL orders with the
                              * original order. */
@@ -2135,12 +2140,12 @@ impl Default for Order {
                                 * 7=Last_or_Bid_Ask, 8=Mid-point */
             outside_rth: false,
             hidden: false,
-            good_after_time: "".to_string(), // Format: 20060505 08:00:00 {time zone}
-            good_till_date: "".to_string(),  // Format: 20060505 08:00:00 {time zone}
-            rule80a: "".to_string(),         /* Individual = 'I', Agency = 'A', AgentOtherMember
-                                              * = 'W', IndividualPTIA = 'J', AgencyPTIA = 'U',
-                                              * AgentOtherMemberPTIA = 'M', IndividualPT = 'K',
-                                              * AgencyPT = 'Y', AgentOtherMemberPT = 'N' */
+            good_after_time: String::new(), // Format: 20060505 08:00:00 {time zone}
+            good_till_date: String::new(),  // Format: 20060505 08:00:00 {time zone}
+            rule80a: String::new(),         /* Individual = 'I', Agency = 'A', AgentOtherMember
+                                             * = 'W', IndividualPTIA = 'J', AgencyPTIA = 'U',
+                                             * AgentOtherMemberPTIA = 'M', IndividualPT = 'K',
+                                             * AgencyPT = 'Y', AgentOtherMemberPT = 'N' */
             all_or_none: false,
             min_qty: UNSET_INTEGER,       //type: int
             percent_offset: UNSET_DOUBLE, // type: float; REL orders only
@@ -2149,18 +2154,18 @@ impl Default for Order {
             trailing_percent: UNSET_DOUBLE, // type: float; TRAILLIMIT orders only
 
             // financial advisors only
-            fa_group: "".to_string(),
-            fa_profile: "".to_string(),
-            fa_method: "".to_string(),
-            fa_percentage: "".to_string(),
+            fa_group: String::new(),
+            fa_profile: String::new(),
+            fa_method: String::new(),
+            fa_percentage: String::new(),
 
             // institutional (ie non-cleared) only
-            designated_location: "".to_string(), //used only when shortSaleSlot=2
-            open_close: "O".to_string(),         // O=Open, C=Close
-            origin: Customer,                    // 0=Customer, 1=Firm
-            short_sale_slot: 0,                  /* type: int; 1 if you hold the shares, 2 if
-                                                  * they will be delivered from elsewhere.  Only
-                                                  * for Action=SSHORT */
+            designated_location: String::new(), //used only when shortSaleSlot=2
+            open_close: "O".to_string(),        // O=Open, C=Close
+            origin: Customer,                   // 0=Customer, 1=Firm
+            short_sale_slot: 0,                 /* type: int; 1 if you hold the shares, 2 if
+                                                 * they will be delivered from elsewhere.  Only
+                                                 * for Action=SSHORT */
             exempt_code: -1,
 
             // SMART routing only
@@ -2187,16 +2192,16 @@ impl Default for Order {
             // VOLATILITY ORDERS ONLY
             volatility: UNSET_DOUBLE,       // type: float
             volatility_type: UNSET_INTEGER, // type: int   // 1=daily, 2=annual
-            delta_neutral_order_type: "".to_string(),
+            delta_neutral_order_type: String::new(),
             delta_neutral_aux_price: UNSET_DOUBLE, // type: float
             delta_neutral_con_id: 0,
-            delta_neutral_settling_firm: "".to_string(),
-            delta_neutral_clearing_account: "".to_string(),
-            delta_neutral_clearing_intent: "".to_string(),
-            delta_neutral_open_close: "".to_string(),
+            delta_neutral_settling_firm: String::new(),
+            delta_neutral_clearing_account: String::new(),
+            delta_neutral_clearing_intent: String::new(),
+            delta_neutral_open_close: String::new(),
             delta_neutral_short_sale: false,
             delta_neutral_short_sale_slot: 0,
-            delta_neutral_designated_location: "".to_string(),
+            delta_neutral_designated_location: String::new(),
             continuous_update: false,
             reference_price_type: UNSET_INTEGER, // type: int; 1=Average, 2 = BidOrAsk
 
@@ -2215,25 +2220,25 @@ impl Default for Order {
             scale_init_position: UNSET_INTEGER, // type: int
             scale_init_fill_qty: UNSET_INTEGER, // type: int
             scale_random_percent: false,
-            scale_table: "".to_string(),
+            scale_table: String::new(),
 
             // HEDGE ORDERS
-            hedge_type: "".to_string(), // 'D' - delta, 'B' - beta, 'F' - FX, 'P' - pair
-            hedge_param: "".to_string(), // 'beta=X' value for beta hedge, 'ratio=Y' for pair hedge
+            hedge_type: String::new(), // 'D' - delta, 'B' - beta, 'F' - FX, 'P' - pair
+            hedge_param: String::new(), // 'beta=X' value for beta hedge, 'ratio=Y' for pair hedge
 
             // Clearing info
-            account: "".to_string(), // IB account
-            settling_firm: "".to_string(),
-            clearing_account: "".to_string(), //True beneficiary of the order
-            clearing_intent: "".to_string(),  // "" (Default), "IB", "Away", "PTA" (PostTrade)
+            account: String::new(), // IB account
+            settling_firm: String::new(),
+            clearing_account: String::new(), //True beneficiary of the order
+            clearing_intent: String::new(),  // "" (Default), "IB", "Away", "PTA" (PostTrade)
 
             // ALGO ORDERS ONLY
-            algo_strategy: "".to_string(),
+            algo_strategy: String::new(),
 
             algo_params: vec![],                //TagValueList
             smart_combo_routing_params: vec![], //TagValueList
 
-            algo_id: "".to_string(),
+            algo_id: String::new(),
 
             // What-if
             what_if: false,
@@ -2243,7 +2248,7 @@ impl Default for Order {
             solicited: false,
 
             // models
-            model_code: "".to_string(),
+            model_code: String::new(),
 
             // order combo legs
             order_combo_legs: vec![], // OrderComboLegListSPtr
@@ -2255,8 +2260,8 @@ impl Default for Order {
             pegged_change_amount: 0.0,
             is_pegged_change_amount_decrease: false,
             reference_change_amount: 0.0,
-            reference_exchange_id: "".to_string(),
-            adjusted_order_type: "".to_string(),
+            reference_exchange_id: String::new(),
+            adjusted_order_type: String::new(),
 
             trigger_price: UNSET_DOUBLE,
             adjusted_stop_price: UNSET_DOUBLE,
@@ -2270,15 +2275,15 @@ impl Default for Order {
             conditions_ignore_rth: false,
 
             // ext operator
-            ext_operator: "".to_string(),
+            ext_operator: String::new(),
 
             // native cash quantity
             cash_qty: UNSET_DOUBLE,
 
-            mifid2decision_maker: "".to_string(),
-            mifid2decision_algo: "".to_string(),
-            mifid2execution_trader: "".to_string(),
-            mifid2execution_algo: "".to_string(),
+            mifid2decision_maker: String::new(),
+            mifid2decision_algo: String::new(),
+            mifid2execution_trader: String::new(),
+            mifid2execution_algo: String::new(),
 
             dont_use_auto_price_for_hedge: false,
 
@@ -2286,11 +2291,11 @@ impl Default for Order {
 
             discretionary_up_to_limit_price: false,
 
-            auto_cancel_date: "".to_string(),
+            auto_cancel_date: String::new(),
             filled_quantity: UNSET_DOUBLE,
             ref_futures_con_id: 0,
             auto_cancel_parent: false,
-            shareholder: "".to_string(),
+            shareholder: String::new(),
             imbalance_only: false,
             route_marketable_to_bbo: false,
             parent_perm_id: 0,
