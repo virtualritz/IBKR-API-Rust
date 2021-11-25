@@ -15,7 +15,9 @@ use twsapi::core::common::{
     RealTimeBar, SmartComponent, TickAttrib, TickAttribBidAsk, TickAttribLast, TickByTickType,
     TickType,
 };
-use twsapi::core::contract::{Contract, ContractDescription, ContractDetails, DeltaNeutralContract};
+use twsapi::core::contract::{
+    Contract, ContractDescription, ContractDetails, DeltaNeutralContract,
+};
 use twsapi::core::execution::Execution;
 use twsapi::core::order::{Order, OrderState, SoftDollarTier};
 use twsapi::core::wrapper::Wrapper;
@@ -634,7 +636,10 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn market_depth_exchanges(&mut self, depth_market_data_descriptions: Vec<DepthMktDataDescription>) {
+    fn market_depth_exchanges(
+        &mut self,
+        depth_market_data_descriptions: Vec<DepthMktDataDescription>,
+    ) {
         info!(
             "market_depth_exchanges -- depth_market_data_descriptions: {:?}",
             depth_market_data_descriptions
@@ -765,7 +770,13 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn profit_and_loss(&mut self, request_id: i32, daily_pn_l: f64, unrealized_pn_l: f64, realized_pn_l: f64) {
+    fn profit_and_loss(
+        &mut self,
+        request_id: i32,
+        daily_pn_l: f64,
+        unrealized_pn_l: f64,
+        realized_pn_l: f64,
+    ) {
         info!(
             "pnl -- request_id: {}, daily_pn_l: {}, unrealized_pn_l: {}, realized_pn_l: {})",
             request_id, daily_pn_l, unrealized_pn_l, realized_pn_l

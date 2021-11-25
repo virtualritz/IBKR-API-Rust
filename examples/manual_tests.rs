@@ -7,11 +7,9 @@ use std::time::Duration;
 use twsapi::core::client::EClient;
 use twsapi::core::{errors::*, streamer::TcpStreamer};
 
-
 mod test_helpers;
 use test_helpers::*;
 // test_helpers::TestWrapper;
-
 
 use color_eyre::eyre::Result;
 
@@ -35,8 +33,6 @@ pub fn main() -> Result<(), IBKRApiLibError> {
     };*/
 
     color_eyre::install();
-
-
 
     let wrapper = Arc::new(Mutex::new(TestWrapper::<TcpStreamer>::new()));
     let app = Arc::new(Mutex::new(EClient::new(wrapper.clone())));

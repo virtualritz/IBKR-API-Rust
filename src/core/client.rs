@@ -1,21 +1,23 @@
 #![allow(clippy::too_many_arguments)]
 //! EClient and supporting structs.  Responsible for connecting to Trader
 //! Workstation or IB Gatway and sending requests
-use std::io::Write;
-use std::marker::Sync;
-use std::net::Shutdown;
-use std::net::TcpStream;
-use std::ops::Deref;
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::channel;
-use std::sync::{Arc, Mutex};
-use std::{fmt::Debug, thread};
-
+use bigdecimal::ToPrimitive;
 use from_ascii::FromAscii;
 use log::*;
-
-use bigdecimal::ToPrimitive;
 use num_derive::{FromPrimitive, ToPrimitive};
+use std::{
+    fmt::Debug,
+    io::Write,
+    marker::Sync,
+    net::{Shutdown, TcpStream},
+    ops::Deref,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        mpsc::channel,
+        Arc, Mutex,
+    },
+    thread,
+};
 
 use super::streamer::{Streamer, TcpStreamer};
 use crate::core::common::*;
@@ -3267,9 +3269,10 @@ where
     ) -> Result<(), IBKRApiLibError> {
         self.check_connected(NO_VALID_ID)?;
 
-        if self.server_version() < MIN_SERVER_VER_TRADING_CLASS {
-            if &contract.trading_class != "" || contract.con_id > 0 {
-                let err = IBKRApiLibError::ApiError(TwsApiReportableError::new(
+        if self.server_version() < MIN_SERVER_VER_TRADING_CLASS
+            && (!contract.trading_class.is_empty() || contract.con_id > 0)
+        {
+            let err = IBKRApiLibError::ApiError(TwsApiReportableError::new(
                     req_id,
                     TwsError::UpdateTws.code().to_string(),
                     format!(
@@ -3279,8 +3282,7 @@ where
                     ),
                 ));
 
-                return Err(err);
-            }
+            return Err(err);
         }
 
         let version = 6;

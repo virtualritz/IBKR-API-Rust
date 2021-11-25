@@ -11,14 +11,14 @@ use bigdecimal::BigDecimal;
 use chrono;
 use chrono::{DateTime, Utc};
 use log::*;
+use num_traits::FromPrimitive;
 use std::borrow::Borrow;
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::{Duration, UNIX_EPOCH};
-use num_traits::FromPrimitive;
 use twsapi::{
-    core::client::{EClient,DateTimeFormat},
+    core::client::{DateTimeFormat, EClient},
     core::common::{
         BarData, CommissionReport, DepthMktDataDescription, FaDataType, FamilyCode, HistogramData,
         HistoricalTick, HistoricalTickBidAsk, HistoricalTickLast, MarketDataTypeEnum, NewsProvider,
@@ -104,17 +104,16 @@ impl<T: Streamer> TestWrapper<T> {
             let next_id = self.next_order_id();
             info!("Placing order... {}", next_id);
 
-            self
-            .client
-            .as_ref()
-            .expect(CLIENT_IS_NONE)
-            .lock()
-            .expect(CLIENT_POISONED_MUTEX)
-            .place_order(
-                next_id,
-                Contract::future("NQ", "20211217", "GLOBEX").borrow(),
-                Order::limit_order("BUY", 1000.0, 16500.0).borrow(),
-            )?;
+            self.client
+                .as_ref()
+                .expect(CLIENT_IS_NONE)
+                .lock()
+                .expect(CLIENT_POISONED_MUTEX)
+                .place_order(
+                    next_id,
+                    Contract::future("NQ", "20211217", "GLOBEX").borrow(),
+                    Order::limit_order("BUY", 1000.0, 16500.0).borrow(),
+                )?;
         }
 
         Ok(())
@@ -3647,7 +3646,10 @@ where
     }
 
     //----------------------------------------------------------------------------------------------
-    fn market_depth_exchanges(&mut self, depth_market_data_descriptions: Vec<DepthMktDataDescription>) {
+    fn market_depth_exchanges(
+        &mut self,
+        depth_market_data_descriptions: Vec<DepthMktDataDescription>,
+    ) {
         info!(
             "market_depth_exchanges -- depth_market_data_descriptions: {:?}",
             depth_market_data_descriptions
@@ -3777,7 +3779,13 @@ where
     }
 
     //----------------------------------------------------------------------------------------------
-    fn profit_and_loss(&mut self, request_id: i32, daily_pn_l: f64, unrealized_pn_l: f64, realized_pn_l: f64) {
+    fn profit_and_loss(
+        &mut self,
+        request_id: i32,
+        daily_pn_l: f64,
+        unrealized_pn_l: f64,
+        realized_pn_l: f64,
+    ) {
         info!(
             "pnl -- request_id: {}, daily_pn_l: {}, unrealized_pn_l: {}, realized_pn_l: {})",
             request_id, daily_pn_l, unrealized_pn_l, realized_pn_l
