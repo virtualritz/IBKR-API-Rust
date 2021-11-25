@@ -707,6 +707,51 @@ impl Order {
             use_price_mgmt_algo,
         }
     }
+
+    pub fn limit_order(action: &str, total_quantity: f64, lmt_price: f64) -> Self {
+        Self {
+            order_type: "LMT".to_string(),
+            action: action.to_string(),
+            total_quantity,
+            lmt_price,
+            ..Default::default()
+        }
+    }
+
+    pub fn market_order(action: &str, total_quantity: f64) -> Self {
+        Self {
+            order_type: "MKT".to_string(),
+            action: action.to_string(),
+            total_quantity,
+            ..Default::default()
+        }
+    }
+
+    pub fn stop_order(action: &str, total_quantity: f64, stop_price: f64) -> Self {
+        Self {
+            order_type: "STP".to_string(),
+            action: action.to_string(),
+            total_quantity,
+            aux_price: stop_price,
+            ..Default::default()
+        }
+    }
+
+    pub fn stop_limit_order(
+        action: &str,
+        total_quantity: f64,
+        lmt_price: f64,
+        stop_price: f64,
+    ) -> Self {
+        Self {
+            order_type: "STP".to_string(),
+            action: action.to_string(),
+            total_quantity,
+            lmt_price,
+            aux_price: stop_price,
+            ..Default::default()
+        }
+    }
 }
 
 impl Display for Order {
