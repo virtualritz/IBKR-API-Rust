@@ -711,8 +711,9 @@ impl Order {
     /// order is re-submitted as a limit order with the limit price set to
     /// the COP or the best bid/ask after the market opens. Products: FUT,
     /// STK
-    pub fn at_auction_order(action: &str, quantity: f64, price: f64) -> Self {
+    pub fn at_auction_order(account: &str, action: &str, quantity: f64, price: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             tif: "AUC".to_string(),
             order_type: "MTL".to_string(),
@@ -728,12 +729,14 @@ impl Order {
     /// eligible to execute. The market sees only the limit price. Products:
     /// STK
     pub fn discretionary_order(
+        account: &str,
         action: &str,
         quantity: f64,
         price: f64,
         discretionary_amount: f64,
     ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity,
@@ -749,8 +752,9 @@ impl Order {
     /// provides no price protection and may fill at a price far
     /// lower/higher than the current displayed bid/ask. Products: BOND,
     /// CFD, EFP, CASH, FUND, FUT, FOP, OPT, STK, WAR
-    pub fn market_order(action: &str, quantity: f64) -> Self {
+    pub fn market_order(account: &str, action: &str, quantity: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MKT".to_string(),
             total_quantity: quantity,
@@ -770,8 +774,14 @@ impl Order {
     /// order is similar to a stop order, except that an MIT sell
     /// order is placed above the current market price, and a stop sell order is
     /// placed below Products: BOND, CFD, CASH, FUT, FOP, OPT, STK, WAR
-    pub fn market_if_touched_order_order(action: &str, quantity: f64, price: f64) -> Self {
+    pub fn market_if_touched_order_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        price: f64,
+    ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MIT".to_string(),
             total_quantity: quantity,
@@ -783,8 +793,9 @@ impl Order {
     /// A Market-on-Close (MOC) order is a market order that is submitted to
     /// execute as close to the closing price as possible. Products: CFD,
     /// FUT, STK, WAR
-    pub fn market_on_close_order(action: &str, quantity: f64) -> Self {
+    pub fn market_on_close_order(account: &str, action: &str, quantity: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MOC".to_string(),
             total_quantity: quantity,
@@ -796,8 +807,9 @@ impl Order {
     /// in force to create an order that is automatically submitted at the
     /// market's open and fills at the market price. Products: CFD, STK,
     /// OPT, WAR
-    pub fn market_on_open_order(action: &str, quantity: f64) -> Self {
+    pub fn market_on_open_order(account: &str, action: &str, quantity: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MKT".to_string(),
             total_quantity: quantity,
@@ -812,8 +824,9 @@ impl Order {
     /// eligible contra-order is available. Limit orders execute only when
     /// the midpoprice:is:i32 better than the limit price. Standard MPM
     /// orders are completely anonymous. Products: STK
-    pub fn midpoint_match_order(action: &str, quantity: f64) -> Self {
+    pub fn midpoint_match_order(account: &str, action: &str, quantity: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MKT".to_string(),
             total_quantity: quantity,
@@ -826,8 +839,9 @@ impl Order {
     /// Set an optional price cap to define the highest price (for a buy
     /// order) or the lowest price (for a sell order) you are willing to
     /// accept. Requires TWS 975+. Smart-routing to US stocks only.
-    pub fn midprice_order(action: &str, quantity: f64, price_cap: f64) -> Self {
+    pub fn midprice_order(account: &str, action: &str, quantity: f64, price_cap: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MIDPRICE".to_string(),
             total_quantity: quantity,
@@ -846,9 +860,15 @@ impl Order {
     /// amount which computes the active limit price as follows:     Sell
     /// order price: Bid price + offset amount     Buy order price: Ask
     /// price - offset amount Products: STK
-    pub fn pegged_to_market_order(action: &str, quantity: f64, market_offset: f64) -> Self {
+    pub fn pegged_to_market_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        market_offset: f64,
+    ) -> Self {
         //pegged_market]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "PEG MKT".to_string(),
             total_quantity: quantity,
@@ -872,6 +892,7 @@ impl Order {
     /// the order when reached. The delta times the change in stock price will
     /// be rounded to the nearest penny in favor of the Products: OPT
     pub fn pegged_to_stock_order(
+        account: &str,
         action: &str,
         quantity: f64,
         delta: f64,
@@ -880,6 +901,7 @@ impl Order {
     ) -> Self {
         //pegged_stock]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "PEG STK".to_string(),
             total_quantity: quantity,
@@ -910,6 +932,7 @@ impl Order {
     /// Futures - not available on paper trading Products: CFD, STK, OPT,
     /// FUT
     pub fn relative_pegged_to_primary_order(
+        account: &str,
         action: &str,
         quantity: f64,
         price_cap: f64,
@@ -917,6 +940,7 @@ impl Order {
     ) -> Self {
         //relative_pegged_primary]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "REL".to_string(),
             total_quantity: quantity,
@@ -934,9 +958,10 @@ impl Order {
     /// Simultaneously it identifies the next best price and quantity
     /// offered/available, and submits the matching quantity of your order
     /// for immediate execution. Products: CFD, STK, WAR
-    pub fn sweep_to_fill_order(action: &str, quantity: f64, price: f64) -> Self {
+    pub fn sweep_to_fill_order(account: &str, action: &str, quantity: f64, price: f64) -> Self {
         //sweep_to_fill]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity,
@@ -962,6 +987,8 @@ impl Order {
     /// the nearest listed increment. Products: OPT
     /// Supported Exchanges: BOX
     pub fn auction_limit_order(
+        account: &str,
+
         action: &str,
         quantity: f64,
         price: f64,
@@ -969,6 +996,8 @@ impl Order {
     ) -> Self {
         //auction_limit]
         Self {
+            account: account.to_string(),
+
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity,
@@ -1001,6 +1030,7 @@ impl Order {
     /// the order and will be used as your auction improvement amount.
     /// Products: OPT Supported Exchanges: BOX
     pub fn auction_pegged_to_stock_order(
+        account: &str,
         action: &str,
         quantity: f64,
         starting_price: f64,
@@ -1008,6 +1038,7 @@ impl Order {
     ) -> Self {
         //auction_pegged_stock]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "PEG STK".to_string(),
             total_quantity: quantity,
@@ -1039,9 +1070,10 @@ impl Order {
     /// change in stock price will be rounded to the nearest penny in favor of
     /// the order and will be used as your auction improvement amount.
     /// Products: OPT Supported Exchanges: BOX
-    pub fn auction_relative_order(action: &str, quantity: f64, offset: f64) -> Self {
+    pub fn auction_relative_order(account: &str, action: &str, quantity: f64, offset: f64) -> Self {
         //auction_relative]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "REL".to_string(),
             total_quantity: quantity,
@@ -1055,9 +1087,10 @@ impl Order {
     /// consist of at least 50 contracts. To execute large-volume orders over
     /// time without moving the market, use the Accumulate/Distribute
     /// algorithm. Products: OPT
-    pub fn block_order(action: &str, quantity: f64, price: f64) -> Self {
+    pub fn block_order(account: &str, action: &str, quantity: f64, price: f64) -> Self {
         //block]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity, //Large volumes!
@@ -1073,9 +1106,10 @@ impl Order {
     /// limit order with the limit price equal to the price at which the
     /// filled portion of the order executed. Products: OPT
     /// Supported Exchanges: BOX
-    pub fn box_top_order(action: &str, quantity: f64) -> Self {
+    pub fn box_top_order(account: &str, action: &str, quantity: f64) -> Self {
         //boxtop]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "BOX TOP".to_string(),
             total_quantity: quantity,
@@ -1088,8 +1122,9 @@ impl Order {
     /// The Limit order ensures that if the order fills, it will not fill at
     /// a price less favorable than your limit price, but it does not
     /// guarantee a fill. Products: BOND, CFD, CASH, FUT, FOP, OPT, STK, WAR
-    pub fn limit_order(action: &str, quantity: f64, limit_price: f64) -> Self {
+    pub fn limit_order(account: &str, action: &str, quantity: f64, limit_price: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity,
@@ -1102,12 +1137,15 @@ impl Order {
     /// using cashQty field Requires TWS or IBG 963+
     /// <https://www.interactivebrokers.com/en/index.php?f=23876#963-02>
     pub fn limit_order_with_cash_qty_order(
+        account: &str,
         action: &str,
         quantity: f64,
         limit_price: f64,
         cash_qty: f64,
     ) -> Self {
         Self {
+            account: account.to_string(),
+
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity,
@@ -1125,6 +1163,7 @@ impl Order {
     /// sell order is placed below. Products: BOND, CFD, CASH, FUT, FOP,
     /// OPT, STK, WAR.
     pub fn limit_if_touched_order(
+        account: &str,
         action: &str,
         quantity: f64,
         limit_price: f64,
@@ -1132,6 +1171,7 @@ impl Order {
     ) -> Self {
         //limitiftouched]
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LIT".to_string(),
             total_quantity: quantity,
@@ -1145,8 +1185,14 @@ impl Order {
     /// A Limit-on-close (LOC) order will be submitted at the close and will
     /// execute if the closing price is at or better than the submitted
     /// limit price. Products: CFD, FUT, STK, WAR.
-    pub fn limit_on_close_order(action: &str, quantity: f64, limit_price: f64) -> Self {
+    pub fn limit_on_close_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        limit_price: f64,
+    ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LOC".to_string(),
             total_quantity: quantity,
@@ -1160,8 +1206,14 @@ impl Order {
     /// and that will only execute at the specified limit price or better.
     /// Selfs are filled in accordance with specific exchange rules.
     /// Products: CFD, STK, OPT, WAR
-    pub fn limit_on_open_order(action: &str, quantity: f64, limit_price: f64) -> Self {
+    pub fn limit_on_open_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        limit_price: f64,
+    ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             tif: "OPG".to_string(),
             order_type: "LMT".to_string(),
@@ -1189,8 +1241,9 @@ impl Order {
     /// the Relative/Pegged-to-Primary order, except that the Passive
     /// relative subtracts the offset from the bid and the Relative adds the
     /// offset to the bid. Products: STK, WAR
-    pub fn passive_relative_order(action: &str, quantity: f64, offset: f64) -> Self {
+    pub fn passive_relative_order(account: &str, action: &str, quantity: f64, offset: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "PASSV REL".to_string(),
             total_quantity: quantity,
@@ -1208,12 +1261,14 @@ impl Order {
     /// be more aggressive. If the market moves in the opposite direction,
     /// the order will execute. Products: STK
     pub fn pegged_to_midpoint_order(
+        account: &str,
         action: &str,
         quantity: f64,
         offset: f64,
         limit_price: f64,
     ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "PEG MID".to_string(),
             total_quantity: quantity,
@@ -1230,6 +1285,7 @@ impl Order {
     /// low side buy limit Products: CFD, BAG, FOP, CASH, FUT, OPT, STK, WAR
     pub fn bracket_order(
         parent_order_id: i32,
+        account: &str,
         action: &str,
         quantity: f64,
         limit_price: f64,
@@ -1239,6 +1295,7 @@ impl Order {
         // This will be our main or "parent" ..Default::default()
         let parent = Self {
             order_id: parent_order_id,
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity,
@@ -1283,8 +1340,9 @@ impl Order {
     /// filled, the remainder of the order is canceled and re-submitted as a
     /// limit order with the limit price equal to the price at which the
     /// filled portion of the order executed.
-    pub fn market_to_limit_order(action: &str, quantity: f64) -> Self {
+    pub fn market_to_limit_order(account: &str, action: &str, quantity: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MTL".to_string(),
             total_quantity: quantity,
@@ -1298,8 +1356,9 @@ impl Order {
     /// immediately execute at the market price. The limit price is set by
     /// Globex to be close to the current market price, slightly higher for
     /// a sell order and lower for a buy Products: FUT, FOP
-    pub fn market_with_protection_order(action: &str, quantity: f64) -> Self {
+    pub fn market_with_protection_order(account: &str, action: &str, quantity: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MKT PRT".to_string(),
             total_quantity: quantity,
@@ -1316,8 +1375,9 @@ impl Order {
     /// position. A Buy stop order is always placed above the current market
     /// price. It is typically used to limit a loss or help protect a profit
     /// on a short sale. Products: CFD, BAG, CASH, FUT, FOP, OPT, STK, WAR
-    pub fn stop_order(action: &str, quantity: f64, stop_price: f64) -> Self {
+    pub fn stop_order(account: &str, action: &str, quantity: f64, stop_price: f64) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "STP".to_string(),
             aux_price: stop_price,
@@ -1334,12 +1394,14 @@ impl Order {
     /// which is an order to buy or sell at a specified price or better.
     /// Products: CFD, CASH, FUT, FOP, OPT, STK, WAR
     pub fn stop_limit_order(
+        account: &str,
         action: &str,
         quantity: f64,
         limit_price: f64,
         stop_price: f64,
     ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "STP LMT".to_string(),
             total_quantity: quantity,
@@ -1358,9 +1420,15 @@ impl Order {
     /// of the order that does not fill within this protected range is
     /// submitted as a limit order at the exchange-defined trigger price +/-
     /// the protection points. Products: FUT
-    pub fn stop_with_protection_order(action: &str, quantity: f64, stop_price: f64) -> Self {
+    pub fn stop_with_protection_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        stop_price: f64,
+    ) -> Self {
         Self {
             total_quantity: quantity,
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "STP PRT".to_string(),
             aux_price: stop_price,
@@ -1379,12 +1447,14 @@ impl Order {
     /// stop orders, and are most appropriate for use in falling
     /// markets. Products: CFD, CASH, FOP, FUT, OPT, STK, WAR
     pub fn trailing_stop_order(
+        account: &str,
         action: &str,
         quantity: f64,
         trailing_percent: f64,
         trail_stop_price: f64,
     ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "TRAIL".to_string(),
             total_quantity: quantity,
@@ -1409,6 +1479,7 @@ impl Order {
     /// and is generally used in falling markets.
     /// Products: BOND, CFD, CASH, FUT, FOP, OPT, STK, WAR
     pub fn trailing_stop_limit_order(
+        account: &str,
         action: &str,
         quantity: f64,
         lmt_price_offset: f64,
@@ -1416,6 +1487,7 @@ impl Order {
         trail_stop_price: f64,
     ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "TRAIL LIMIT".to_string(),
             total_quantity: quantity,
@@ -1434,12 +1506,14 @@ impl Order {
     /// SmartRouted, each leg may be executed separately to ensure best
     /// execution. Products: OPT, STK, FUT
     pub fn combo_limit_order(
+        account: &str,
         action: &str,
         quantity: f64,
         limit_price: f64,
         non_guaranteed: bool,
     ) -> Self {
         let mut order = Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LMT".to_string(),
             tif: "GTC".to_string(),
@@ -1466,8 +1540,14 @@ impl Order {
     /// SmartRouted, each leg may be executed separately to ensure best
     /// execution. Products: OPT, STK, FUT
 
-    pub fn combo_market_order(action: &str, quantity: f64, non_guaranteed: bool) -> Self {
+    pub fn combo_market_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        non_guaranteed: bool,
+    ) -> Self {
         let mut order = Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "MKT".to_string(),
             total_quantity: quantity,
@@ -1491,12 +1571,14 @@ impl Order {
     /// SmartRouted, each leg may be executed separately to ensure best
     /// execution. Products: OPT, STK, FUT
     pub fn limit_for_combo_with_leg_prices_order(
+        account: &str,
         action: &str,
         quantity: f64,
         leg_prices: Vec<f64>,
         non_guaranteed: bool,
     ) -> Self {
         let mut order = Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "LMT".to_string(),
             total_quantity: quantity,
@@ -1524,12 +1606,14 @@ impl Order {
     /// SmartRouted, each leg may be executed separately to ensure best
     /// execution. Products: OPT, STK, FUT
     pub fn relative_limit_combo_order(
+        account: &str,
         action: &str,
         quantity: f64,
         limit_price: f64,
         non_guaranteed: bool,
     ) -> Self {
         let mut order = Self {
+            account: account.to_string(),
             action: action.to_string(),
             total_quantity: quantity,
             order_type: "REL + LMT".to_string(),
@@ -1553,8 +1637,14 @@ impl Order {
     /// routed directly to an exchange. For combination orders that are
     /// SmartRouted, each leg may be executed separately to ensure best
     /// execution. Products: OPT, STK, FUT
-    pub fn relative_market_combo_order(action: &str, quantity: f64, non_guaranteed: bool) -> Self {
+    pub fn relative_market_combo_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        non_guaranteed: bool,
+    ) -> Self {
         let mut order = Self {
+            account: account.to_string(),
             action: action.to_string(),
             total_quantity: quantity,
             order_type: "REL + MKT".to_string(),
@@ -1613,12 +1703,14 @@ impl Order {
     /// willing to pay or receive.
     /// Products: FOP, OPT
     pub fn volatility_order(
+        account: &str,
         action: &str,
         quantity: f64,
         volatility_percent: f64,
         volatility_type: i32,
     ) -> Self {
         Self {
+            account: account.to_string(),
             action: action.to_string(),
             order_type: "VOL".to_string(),
             total_quantity: quantity,
@@ -1629,9 +1721,9 @@ impl Order {
         }
     }
 
-    pub fn market_fhedge_order(parent_order_id: i32, action: &str) -> Self {
+    pub fn market_fhedge_order(account: &str, parent_order_id: i32, action: &str) -> Self {
         // FX Hedge orders can only have a quantity of 0
-        let mut order = Self::market_order(action, 0.0);
+        let mut order = Self::market_order(account, action, 0.0);
 
         order.parent_id = parent_order_id;
         order.hedge_type = "F".to_string();
@@ -1640,6 +1732,7 @@ impl Order {
     }
 
     pub fn pegged_to_benchmark_order(
+        account: &str,
         action: &str,
         quantity: f64,
         starting_price: f64,
@@ -1655,6 +1748,7 @@ impl Order {
         Self {
             order_type: "PEG BENCH".to_string(),
             // BUY or SELL
+            account: account.to_string(),
             action: action.to_string(),
             total_quantity: quantity,
             // Beginning with price...
@@ -1688,6 +1782,7 @@ impl Order {
     ) -> Self {
         // Attached order is a conventional STP order in opposite direction
         let mut order = Self::stop_order(
+            &parent.account,
             if parent.action == "BUY" {
                 "SELL"
             } else {
@@ -1717,6 +1812,7 @@ impl Order {
     ) -> Self {
         // Attached order is a conventional STP ..Default::default()
         let mut order = Self::stop_order(
+            &parent.account,
             if parent.action == "BUY" {
                 "SELL"
             } else {
@@ -1748,6 +1844,7 @@ impl Order {
     ) -> Self {
         // Attached order is a conventional STP ..Default::default()
         let mut order = Self::stop_order(
+            &parent.account,
             if parent.action == "BUY" {
                 "SELL"
             } else {
@@ -1930,8 +2027,13 @@ impl Order {
         vol_cond
     }
 
-    pub fn what_if_limit_order(action: &str, quantity: f64, limit_price: f64) -> Self {
-        let mut order = Self::limit_order(action, quantity, limit_price);
+    pub fn what_if_limit_order(
+        account: &str,
+        action: &str,
+        quantity: f64,
+        limit_price: f64,
+    ) -> Self {
+        let mut order = Self::limit_order(account, action, quantity, limit_price);
         order.what_if = true;
 
         order
