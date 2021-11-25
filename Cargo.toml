@@ -10,7 +10,7 @@ path = "src/lib.rs"
 
 [[example]]
 name = "twsapi_client"
-path = "example/bin/manual_tests.rs"
+path = "examples/manual_tests.rs"
 
 [dependencies]
 ascii = "1.0.0"
@@ -23,6 +23,7 @@ bzip2 = "0.4.3"
 encoding = "0.2.33"
 float-cmp = "0.9.0"
 from-ascii = "0.0.1"
+futures = {version = "0.3.17", features = ["executor"]}
 log = "0.4.14"
 log4rs = "1.0.0"
 num = "0.4.0"

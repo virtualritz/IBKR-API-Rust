@@ -9,16 +9,16 @@ use chrono::prelude::DateTime;
 use chrono::Utc;
 use log::*;
 
-use crate::core::common::{
+use twsapi::core::common::{
     BarData, CommissionReport, DepthMktDataDescription, FaDataType, FamilyCode, HistogramData,
     HistoricalTick, HistoricalTickBidAsk, HistoricalTickLast, NewsProvider, PriceIncrement,
     RealTimeBar, SmartComponent, TickAttrib, TickAttribBidAsk, TickAttribLast, TickByTickType,
     TickType,
 };
-use crate::core::contract::{Contract, ContractDescription, ContractDetails, DeltaNeutralContract};
-use crate::core::execution::Execution;
-use crate::core::order::{Order, OrderState, SoftDollarTier};
-use crate::core::wrapper::Wrapper;
+use twsapi::core::contract::{Contract, ContractDescription, ContractDetails, DeltaNeutralContract};
+use twsapi::core::execution::Execution;
+use twsapi::core::order::{Order, OrderState, SoftDollarTier};
+use twsapi::core::wrapper::Wrapper;
 
 //==================================================================================================
 /// Example implementation of the Wrapper callback trait.  Just logs callback
@@ -101,7 +101,7 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn tick_efp(
+    fn tick_exchange_for_physical(
         &mut self,
         request_id: i32,
         tick_type: TickType,
@@ -148,13 +148,13 @@ impl Wrapper for DefaultWrapper {
         last_fill_price: f64,
         client_id: i32,
         why_held: &str,
-        mkt_cap_price: f64,
+        market_cap_price: f64,
     ) {
         info!(
             "order_status -- order_id: {}, status: {}, filled: {}, remaining: {}, avg_fill_price: {}, \
-            perm_id: {}, parent_id: {}, last_fill_price: {}, client_id: {}, why_held: {}, mkt_cap_price: {}",
+            perm_id: {}, parent_id: {}, last_fill_price: {}, client_id: {}, why_held: {}, market_cap_price: {}",
             order_id, status, filled, remaining, avg_fill_price, perm_id, parent_id, last_fill_price,
-            client_id, why_held, mkt_cap_price
+            client_id, why_held, market_cap_price
         );
     }
 
@@ -266,7 +266,7 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn update_mkt_depth(
+    fn update_market_depth(
         &mut self,
         request_id: i32,
         position: i32,
@@ -276,13 +276,13 @@ impl Wrapper for DefaultWrapper {
         size: i32,
     ) {
         info!(
-            "update_mkt_depth -- request_id: {}, position: {}, operation: {}, side: {}, price: {}, size: {}",
+            "update_market_depth -- request_id: {}, position: {}, operation: {}, side: {}, price: {}, size: {}",
             request_id, position, operation, side, price, size
         );
     }
 
     //----------------------------------------------------------------------------------------------
-    fn update_mkt_depth_l2(
+    fn update_market_depth_l2(
         &mut self,
         request_id: i32,
         position: i32,
@@ -294,7 +294,7 @@ impl Wrapper for DefaultWrapper {
         is_smart_depth: bool,
     ) {
         info!(
-            "update_mkt_depth_l2 -- request_id: {}, position: {}, market_maker: {}, operation: {}, side: {}, price: {}, size: {}, is_smart_depth: {},",
+            "update_market_depth_l2 -- request_id: {}, position: {}, market_maker: {}, operation: {}, side: {}, price: {}, size: {}, is_smart_depth: {},",
             request_id, position, market_maker, operation, side, price, size, is_smart_depth
         );
     }
@@ -319,7 +319,7 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn receive_fa(&mut self, fa_data: FaDataType, cxml: &str) {
+    fn receive_financial_advisor(&mut self, fa_data: FaDataType, cxml: &str) {
         info!("receive_fa -- fa_data: {}, cxml: {}", fa_data, cxml);
     }
 
@@ -634,10 +634,10 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn mkt_depth_exchanges(&mut self, depth_mkt_data_descriptions: Vec<DepthMktDataDescription>) {
+    fn market_depth_exchanges(&mut self, depth_market_data_descriptions: Vec<DepthMktDataDescription>) {
         info!(
-            "mkt_depth_exchanges -- depth_mkt_data_descriptions: {:?}",
-            depth_mkt_data_descriptions
+            "market_depth_exchanges -- depth_market_data_descriptions: {:?}",
+            depth_market_data_descriptions
         );
     }
 
@@ -667,7 +667,7 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn tick_request_params(
+    fn tick_request_parameters(
         &mut self,
         ticker_id: i32,
         min_tick: f64,
@@ -741,17 +741,17 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn reroute_mkt_data_req(&mut self, request_id: i32, con_id: i32, exchange: &str) {
+    fn reroute_market_data_request(&mut self, request_id: i32, con_id: i32, exchange: &str) {
         info!(
-            "reroute_mkt_data_req -- request_id: {}, con_id: {}, exchange: {}",
+            "reroute_market_data_req -- request_id: {}, con_id: {}, exchange: {}",
             request_id, con_id, exchange
         );
     }
 
     //----------------------------------------------------------------------------------------------
-    fn reroute_mkt_depth_req(&mut self, request_id: i32, con_id: i32, exchange: &str) {
+    fn reroute_market_depth_request(&mut self, request_id: i32, con_id: i32, exchange: &str) {
         info!(
-            "reroute_mkt_depth_req -- request_id: {}, con_id: {}, exchange: {}",
+            "reroute_market_depth_req -- request_id: {}, con_id: {}, exchange: {}",
             request_id, con_id, exchange
         );
     }
@@ -765,7 +765,7 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn pnl(&mut self, request_id: i32, daily_pn_l: f64, unrealized_pn_l: f64, realized_pn_l: f64) {
+    fn profit_and_loss(&mut self, request_id: i32, daily_pn_l: f64, unrealized_pn_l: f64, realized_pn_l: f64) {
         info!(
             "pnl -- request_id: {}, daily_pn_l: {}, unrealized_pn_l: {}, realized_pn_l: {})",
             request_id, daily_pn_l, unrealized_pn_l, realized_pn_l
@@ -773,7 +773,7 @@ impl Wrapper for DefaultWrapper {
     }
 
     //----------------------------------------------------------------------------------------------
-    fn pnl_single(
+    fn profit_and_loss_single(
         &mut self,
         request_id: i32,
         pos: i32,

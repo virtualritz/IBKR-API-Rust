@@ -1,13 +1,13 @@
 #[cfg(test)]
 mod tests {
 
-    use crate::core::common::{TickByTickType, UNSET_DOUBLE, UNSET_INTEGER};
-    use crate::core::errors::IBKRApiLibError;
-    use crate::core::messages::{
+    use crate::examples::contract_samples;
+    use crate::twsapi::common::{TickByTickType, UNSET_DOUBLE, UNSET_INTEGER};
+    use crate::twsapi::errors::IBKRApiLibError;
+    use crate::twsapi::messages::{
         make_field, make_field_handle_empty, make_message, read_fields, read_msg,
         OutgoingMessageIds,
     };
-    use crate::examples::contract_samples;
     #[test]
     fn test_make_field() -> Result<(), IBKRApiLibError> {
         assert_eq!("1\u{0}", make_field(&true)?);

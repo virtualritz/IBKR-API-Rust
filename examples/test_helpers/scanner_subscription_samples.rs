@@ -1,5 +1,5 @@
 //! Scanner subscription examples
-use crate::core::scanner::ScannerSubscription;
+use twsapi::core::scanner::ScannerSubscription;
 
 ///Hot US stocks by volume
 pub fn hot_usstk_by_volume() -> ScannerSubscription {

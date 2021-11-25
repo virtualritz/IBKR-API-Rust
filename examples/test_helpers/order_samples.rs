@@ -2,9 +2,9 @@
 //! Examples of populating fields of various order types
 use num_traits::FromPrimitive;
 
-use crate::core::common::TagValue;
-use crate::core::order::{AuctionStrategy, Order, OrderComboLeg};
-use crate::core::order_condition::{
+use twsapi::core::common::TagValue;
+use twsapi::core::order::{AuctionStrategy, Order, OrderComboLeg};
+use twsapi::core::order_condition::{
     create_condition, ConditionType, ExecutionCondition, MarginCondition, PercentChangeCondition,
     PriceCondition, TimeCondition, VolumeCondition,
 };

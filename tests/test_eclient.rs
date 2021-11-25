@@ -4,9 +4,9 @@ use contract_samples::simple_future;
 
 #[cfg(test)]
 mod tests {
-    use crate::core::client::{ConnStatus, EClient, POISONED_MUTEX};
+    use crate::twsapi::client::{ConnStatus, EClient, POISONED_MUTEX};
 
-    use crate::core::{
+    use crate::twsapi::{
         common::{
             BarData, CommissionReport, DepthMktDataDescription, FaDataType, FamilyCode,
             HistogramData, HistoricalTick, HistoricalTickBidAsk, HistoricalTickLast, NewsProvider,

@@ -6,7 +6,11 @@ use std::thread;
 use std::time::Duration;
 use twsapi::core::client::EClient;
 use twsapi::core::{errors::*, streamer::TcpStreamer};
-use twsapi::examples::test_helpers::TestWrapper;
+
+
+mod test_helpers;
+use test_helpers::*;
+// test_helpers::TestWrapper;
 
 
 use color_eyre::eyre::Result;

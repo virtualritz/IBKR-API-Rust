@@ -1,6 +1,6 @@
 //! Examples of populating fields that define various types of contacts
 
-use crate::core::contract::{ComboLeg, Contract, PositionType};
+use twsapi::core::contract::{ComboLeg, Contract, PositionType};
 
 //==================================================================================================
 pub fn eur_gbp_fx() -> Contract {

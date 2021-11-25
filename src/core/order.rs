@@ -192,7 +192,7 @@ impl Display for OrderState {
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
 pub struct OrderComboLeg {
-    pub(crate) price: f64, // type: float
+    pub price: f64, // type: float
 }
 
 impl OrderComboLeg {
