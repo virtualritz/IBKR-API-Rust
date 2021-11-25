@@ -40,6 +40,7 @@ impl Default for PositionType {
 
 //==================================================================================================
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(default)]
 pub struct ComboLeg {
     pub con_id: i32,
     pub ratio: f64,
@@ -131,6 +132,7 @@ impl Display for DeltaNeutralContract {
 
 //==================================================================================================
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(default)]
 pub struct Contract {
     pub con_id: i32,
     pub symbol: String,
@@ -150,7 +152,6 @@ pub struct Contract {
     pub sec_id_type: String,
     // CUSIP; SEDOL; ISIN;RIC
     pub sec_id: String,
-
     //combos
     pub combo_legs_descrip: String,
     // received in open order 14 and up for all combos
@@ -297,6 +298,7 @@ impl Display for Contract {
 
 //==================================================================================================
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(default)]
 pub struct ContractDetails {
     pub contract: Contract,
     pub market_name: String,
@@ -524,6 +526,7 @@ impl Display for ContractDetails {
 
 //==================================================================================================
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[serde(default)]
 pub struct ContractDescription {
     pub contract: Contract,
     pub derivative_sec_types: Vec<String>, // type: list of strings
