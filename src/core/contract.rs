@@ -89,7 +89,7 @@ impl Display for ComboLeg {
             open_close: {}\n\
             short_sale_slot: {}\n\
             designated_location: {}\n\
-            exempt_code: {}"
+            exempt_code: {}",
             self.con_id,
             self.ratio,
             self.action,
