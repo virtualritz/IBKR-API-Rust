@@ -82,14 +82,14 @@ impl Display for ComboLeg {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "con_id: {}\n
-            ratio: {}\n
-            action: {}\n
-            exchange: {}\n
-            open_close: {}\n
-            short_sale_slot: {}\n
-            designated_location: {}\n
-            exempt_code: {}\n",
+            "con_id: {}\n\
+            ratio: {}\n\
+            action: {}\n\
+            exchange: {}\n\
+            open_close: {}\n\
+            short_sale_slot: {}\n\
+            designated_location: {}\n\
+            exempt_code: {}"
             self.con_id,
             self.ratio,
             self.action,
@@ -124,7 +124,9 @@ impl Display for DeltaNeutralContract {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "con_id: {}\n delta: {}\n price: {}\n",
+            "con_id: {}\n\
+             delta: {}\n\
+             price: {}",
             self.con_id, self.delta, self.price,
         )
     }
@@ -251,25 +253,24 @@ impl Display for Contract {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "con_id: {}\n
-             symbol: {}\n
-             sec_type: {}\n
-             last_trade_date_or_contract_month: {}\n
-             strike: {}\n
-             right: {}\n
-             multiplier: {}\n
-             exchange: {}\n
-             primary_exchange: {}\n
-             currency: {}\n
-             local_symbol: {}\n
-             trading_class: {}\n
-             include_expired: {}\n
-             sec_id_type: {}\n
-             sec_id: {}\n
-             combo_legs_descrip: {}\n
-             combo_legs: [{}]\n
-             delta_neutral_contract: [{:?}]\n
-            ",
+            "con_id: {}\n\
+            symbol: {}\n\
+            sec_type: {}\n\
+            last_trade_date_or_contract_month: {}\n\
+            strike: {}\n\
+            right: {}\n\
+            multiplier: {}\n\
+            exchange: {}\n\
+            primary_exchange: {}\n\
+            currency: {}\n\
+            local_symbol: {}\n\
+            trading_class: {}\n\
+            include_expired: {}\n\
+            sec_id_type: {}\n\
+            sec_id: {}\n\
+            combo_legs_descrip: {}\n\
+            combo_legs: [{}]\n
+            delta_neutral_contract: [{:?}]",
             self.con_id,
             self.symbol,
             self.sec_type,
@@ -436,46 +437,46 @@ impl Display for ContractDetails {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "contract: {}\n
-            market_name: {}\n
-            min_tick: {}\n
-            order_types: {}\n
-            valid_exchanges: {}\n
-            price_magnifier: {}\n
-            under_con_id: {}\n
-            long_name: {}\n
-            contract_month: {}\n
-            industry: {}\n
-            category: {}\n
-            subcategory: {}\n
-            time_zone_id: {}\n
-            trading_hours: {}\n
-            liquid_hours: {}\n
-            ev_rule: {}\n
-            ev_multiplier: {}\n
-            md_size_multiplier: {}\n
-            agg_group: {}\n
-            under_symbol: {}\n
-            under_sec_type: {}\n
-            market_rule_ids: {}\n
-            sec_id_list: {}\n
-            real_expiration_date: {}\n
-            last_trade_time: {}\n
-            cusip: {}\n
-            ratings: {}\n
-            desc_append: {}\n
-            bond_type: {}\n
-            coupon_type: {}\n
-            callable: {}\n
-            putable: {}\n
-            coupon: {}\n
-            convertible: {}\n
-            maturity: {}\n
-            issue_date: {}\n
-            next_option_date: {}\n
-            next_option_type: {}\n
-            next_option_partial: {}\n
-            notes: {}\n",
+            "contract: {}\n\
+            market_name: {}\n\
+            min_tick: {}\n\
+            order_types: {}\n\
+            valid_exchanges: {}\n\
+            price_magnifier: {}\n\
+            under_con_id: {}\n\
+            long_name: {}\n\
+            contract_month: {}\n\
+            industry: {}\n\
+            category: {}\n\
+            subcategory: {}\n\
+            time_zone_id: {}\n\
+            trading_hours: {}\n\
+            liquid_hours: {}\n\
+            ev_rule: {}\n\
+            ev_multiplier: {}\n\
+            md_size_multiplier: {}\n\
+            agg_group: {}\n\
+            under_symbol: {}\n\
+            under_sec_type: {}\n\
+            market_rule_ids: {}\n\
+            sec_id_list: {}\n\
+            real_expiration_date: {}\n\
+            last_trade_time: {}\n\
+            cusip: {}\n\
+            ratings: {}\n\
+            desc_append: {}\n\
+            bond_type: {}\n\
+            coupon_type: {}\n\
+            callable: {}\n\
+            putable: {}\n\
+            coupon: {}\n\
+            convertible: {}\n\
+            maturity: {}\n\
+            issue_date: {}\n\
+            next_option_date: {}\n\
+            next_option_type: {}\n\
+            next_option_partial: {}\n\
+            notes: {}",
             self.contract,
             self.market_name,
             self.min_tick,
@@ -545,7 +546,8 @@ impl Display for ContractDescription {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         write!(
             f,
-            "contract: {}\nderivative_sec_types: ({})\n",
+            "contract: {}\n\
+             derivative_sec_types: ({})",
             self.contract,
             self.derivative_sec_types
                 .iter()
