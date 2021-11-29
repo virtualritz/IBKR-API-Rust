@@ -238,12 +238,34 @@ impl Contract {
         }
     }
 
-    pub fn stock(symbol: &str, exchange: &str, currency: &str) -> Self {
+    pub fn stock(symbol: &str, exchange: &str, currency: Option<&str>) -> Self {
         Self {
             symbol: symbol.to_string(),
             sec_type: "STK".to_string(),
             exchange: exchange.to_string(),
-            currency: currency.to_string(),
+            currency: currency.unwrap_or("USD").to_string(),
+            ..Default::default()
+        }
+    }
+
+    pub fn option(
+        symbol: &str,
+        last_trade_date_or_contract_month: &str,
+        strike_price: f64,
+        right: &str,
+        exchange: &str,
+        multiplier: Option<f64>,
+        currency: Option<&str>,
+    ) -> Self {
+        Self {
+            symbol: symbol.to_string(),
+            sec_type: "OPT".to_string(),
+            exchange: exchange.to_string(),
+            currency: currency.unwrap_or("USD").to_string(),
+            last_trade_date_or_contract_month: last_trade_date_or_contract_month.to_string(),
+            strike: strike_price,
+            right: right.to_string(),
+            multiplier: multiplier.unwrap_or(1.0).to_string(),
             ..Default::default()
         }
     }
