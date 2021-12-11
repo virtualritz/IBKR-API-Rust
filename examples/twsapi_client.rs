@@ -21,7 +21,7 @@ use color_eyre::eyre::Result;
 /// TestWrapper which is called by next_valid_id
 //==================================================================================================
 pub fn main() -> Result<(), IBKRApiLibError> {
-    /*match log4rs::init_file("./log_config.yml", Default::default()) {
+    match log4rs::init_file("./log_config.yml", Default::default()) {
         Ok(_) => (),
         Err(_) => {
             return Err(IBKRApiLibError::ApiError(TwsApiReportableError::new(
@@ -30,14 +30,14 @@ pub fn main() -> Result<(), IBKRApiLibError> {
                 "Failed to create logger!!".to_string(),
             )))
         }
-    };*/
+    };
 
     color_eyre::install();
 
     let wrapper = Arc::new(Mutex::new(TestWrapper::<TcpStreamer>::new()));
     let app = Arc::new(Mutex::new(EClient::new(wrapper.clone())));
 
-    info!("getting connection...");
+    info!("getting connection... 1, 2, 3...");
 
     wrapper.lock().expect("Wrapper mutex was poisoned").client = Option::from(app.clone());
 
@@ -45,7 +45,8 @@ pub fn main() -> Result<(), IBKRApiLibError> {
     // set
     app.lock()
         .expect("EClient mutex was poisoned")
-        .connect("127.0.0.1", 4002, 0)?;
+        .connect("btcjopaper.rockyahoo.com", 4002, 0)?;
+    //.connect("127.0.0.1", 4002, 0)?;
 
     thread::sleep(Duration::new(2, 0));
 

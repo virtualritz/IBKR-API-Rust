@@ -10,7 +10,7 @@ path = "src/lib.rs"
 
 [[example]]
 name = "twsapi_client"
-path = "examples/manual_tests.rs"
+path = "examples/twsapi_client.rs"
 
 [dependencies]
 ascii = "1.0.0"
@@ -28,4 +28,4 @@ log4rs = "1.0.0"
 num = "0.4.0"
 num-derive = "0.3.3"
 num-traits = "0.2.14"
-serde = { version = "1.0.130", features = ["derive"] }
+serde = { version = "1.0.131", features = ["derive"] }

@@ -227,7 +227,7 @@ impl Contract {
         }
     }
 
-    pub fn future(symbol: &str, exchange: &str, last_trade_date_or_contract_month: &str) -> Self {
+    pub fn future(symbol: &str, last_trade_date_or_contract_month: &str, exchange: &str) -> Self {
         Self {
             symbol: symbol.to_string(),
             sec_type: "FUT".to_string(),
@@ -261,11 +261,11 @@ impl Contract {
             symbol: symbol.to_string(),
             sec_type: "OPT".to_string(),
             exchange: exchange.to_string(),
-            currency: currency.unwrap_or("USD").to_string(),
+            currency: currency.map_or("".to_string(), |v| v.to_string()),
             last_trade_date_or_contract_month: last_trade_date_or_contract_month.to_string(),
             strike: strike_price,
             right: right.to_string(),
-            multiplier: multiplier.unwrap_or(1.0).to_string(),
+            multiplier: multiplier.map_or("".to_string(), |v| v.to_string()),
             ..Default::default()
         }
     }
@@ -316,6 +316,12 @@ impl Display for Contract {
                 .join(","),
             self.delta_neutral_contract
         )
+    }
+}
+
+impl From<ContractDetails> for Contract {
+    fn from(details: ContractDetails) -> Self {
+        details.contract
     }
 }
 

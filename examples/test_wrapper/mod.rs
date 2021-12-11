@@ -72,28 +72,28 @@ impl<T: Streamer> TestWrapper<T> {
         self.place_futures_order()?;
         //self.order_operations_req()?; //tested ok
         //self.what_if_order_operations()?; //tested ok
-        //self.account_operations_req()?; //tested ok
-        //self.market_data_type_operations()?; //tested ok
-        //self.tick_data_operations_req(); //tested ok
-        //self.market_depth_operations_req(); //tested ok
-        //self.real_time_bars_operations_req(); // tested ok
-        //self.historical_data_operations_req(); // Tested ok
-        //self.options_operations_req(); tested ok
-        //self.market_scanners_operations_req()?; // tested ok
-        //self.fundamentals_operations_req(); //retest with research data subscription
-        //self.contract_operations()?; //tested ok
-        //self.tick_by_tick_operations_req()?; //tested ok
-        //self.historical_ticks_operations(); //tested ok
-        //self.histogram_operations_req(); //tested ok
-        //self.continuous_futures_operations_req(); //tested ok
-        //self.pnl_operations_req()?; //tested ok
-        //self.market_rule_operations(); //testd ok
-        //self.reroute_cfd_operations(); //tested ok
-        //self.financial_advisor_operations(); need financial advisor account to test
-        //self.news_operations_req()?; // tested ok
-        //self.bulletins_operations_req()?; //tested ok
-        //self.miscelaneous_operations(); //tested ok
-        //self.linking_operations(); //tested ok
+        self.account_operations_req()?; //tested ok
+                                        //self.market_data_type_operations()?; //tested ok
+                                        //self.tick_data_operations_req(); //tested ok
+                                        //self.market_depth_operations_req(); //tested ok
+                                        //self.real_time_bars_operations_req(); // tested ok
+                                        //self.historical_data_operations_req(); // Tested ok
+                                        //self.options_operations_req(); tested ok
+                                        //self.market_scanners_operations_req()?; // tested ok
+                                        //self.fundamentals_operations_req(); //retest with research data subscription
+                                        //self.contract_operations()?; //tested ok
+                                        //self.tick_by_tick_operations_req()?; //tested ok
+                                        //self.historical_ticks_operations(); //tested ok
+                                        //self.histogram_operations_req(); //tested ok
+                                        //self.continuous_futures_operations_req(); //tested ok
+                                        //self.pnl_operations_req()?; //tested ok
+                                        //self.market_rule_operations(); //testd ok
+                                        //self.reroute_cfd_operations(); //tested ok
+                                        //self.financial_advisor_operations(); need financial advisor account to test
+                                        //self.news_operations_req()?; // tested ok
+                                        //self.bulletins_operations_req()?; //tested ok
+                                        //self.miscelaneous_operations(); //tested ok
+                                        //self.linking_operations(); //tested ok
         Ok(())
     }
 
@@ -111,8 +111,8 @@ impl<T: Streamer> TestWrapper<T> {
                 .expect(CLIENT_POISONED_MUTEX)
                 .place_order(
                     next_id,
-                    Contract::future("NQ", "20211217", "GLOBEX").borrow(),
-                    Order::limit_order("BUY", 1000.0, 16500.0).borrow(),
+                    &Contract::future("NQ", "GLOBEX", "20211217"),
+                    &Order::limit_order("DF3987931", "BUY", 10.0, 16500.0),
                 )?;
         }
 
@@ -133,7 +133,7 @@ impl<T: Streamer> TestWrapper<T> {
         locked_client.request_managed_accts()?;
 
         // Requesting family codes
-
+        /*
         locked_client.request_family_codes()?;
 
         // Requesting accounts' summary
@@ -153,7 +153,7 @@ impl<T: Streamer> TestWrapper<T> {
         // Requesting all accounts' positions.
         locked_client.request_positions()?;
 
-        locked_client.request_positions_multi(9006, &self.account, "")?;
+        locked_client.request_positions_multi(9006, &self.account, "")?;*/
 
         Ok(())
     }
