@@ -265,7 +265,7 @@ impl Contract {
             last_trade_date_or_contract_month: last_trade_date_or_contract_month.to_string(),
             strike: strike_price,
             right: right.to_string(),
-            multiplier: multiplier.map_or("".to_string(), |v| v.to_string()),
+            multiplier: multiplier.map_or("100".to_string(), |v| v.to_string()),
             ..Default::default()
         }
     }
