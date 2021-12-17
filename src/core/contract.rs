@@ -238,6 +238,29 @@ impl Contract {
         }
     }
 
+    pub fn futures_option(symbol: &str, last_trade_date_or_contract_month: &str, strike: f64, right: &str, exchange: &str) -> Self {
+        Self {
+            symbol: symbol.to_string(),
+            sec_type: "FOP".to_string(),
+            strike,
+            right: right.to_string(),
+            exchange: exchange.to_string(),
+            //currency: "USD".to_string(),
+            last_trade_date_or_contract_month: last_trade_date_or_contract_month.to_string(),
+            ..Default::default()
+        }
+    }
+
+    pub fn index(symbol: &str, exchange: &str, currency: &str) -> Self {
+        Self {
+            symbol: symbol.to_string(),
+            sec_type: "IND".to_string(),
+            exchange: exchange.to_string(),
+            currency: currency.to_string(),
+            ..Default::default()
+        }
+    }
+
     pub fn stock(symbol: &str, exchange: &str, currency: Option<&str>) -> Self {
         Self {
             symbol: symbol.to_string(),
